@@ -1,7 +1,8 @@
-package com.example.cricketscoringapp
+package com.example.cricketscoringapp.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.cricketscoringapp.R
 
 class TeamOneActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

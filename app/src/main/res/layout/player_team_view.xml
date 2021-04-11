@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_margin="5dp"
+    android:orientation="horizontal"
+    android:gravity=""
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:background="@drawable/team_player_list"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Player Name"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:layout_gravity="start"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/tv_player_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="fill_horizontal"
+        android:padding="16dp"
+        android:text="BATSMAN"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_marginStart="150dp"
+        android:textStyle="bold"
+
+        />
+
+
+</LinearLayout>
