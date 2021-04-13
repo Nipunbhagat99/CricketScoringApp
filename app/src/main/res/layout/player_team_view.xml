@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_margin="5dp"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:orientation="horizontal"
     android:gravity=""
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:background="@drawable/team_player_list"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/tv_player_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="Player Name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:textSize="16sp"
-        android:padding="16dp"
+        android:gravity="center"
+        android:paddingStart="20dp"
         android:layout_gravity="start"
         android:textColor="@color/white"
         />
@@ -23,12 +27,15 @@
     <TextView
         android:id="@+id/tv_player_role"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:gravity="fill_horizontal"
-        android:padding="16dp"
+        android:gravity="center"
         android:text="BATSMAN"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
+        android:paddingEnd="20dp"
         android:textSize="12sp"
         android:layout_marginStart="150dp"
         android:textStyle="bold"
@@ -36,4 +43,4 @@
         />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

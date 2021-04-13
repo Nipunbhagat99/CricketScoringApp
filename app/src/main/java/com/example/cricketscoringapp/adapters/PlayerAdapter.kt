@@ -38,6 +38,15 @@ class PlayerAdapter(private val context : Context,private val list : ArrayList<P
     }
 
 
+    fun removeAt(position : Int){
+
+            list.removeAt(position)
+            notifyItemRemoved(position)
+
+
+    }
+
+
 
    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

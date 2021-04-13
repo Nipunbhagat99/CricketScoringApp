@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.TeamOneActivity"
     >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     <EditText
         android:layout_width="match_parent"
@@ -45,6 +50,17 @@
         android:layout_marginEnd="30dp"
         android:text="NEW PLAYER"
         />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="0"
+        android:theme="@style/Button.History"
+        android:text="SUBMIT"
+        />
+
 
 
 
