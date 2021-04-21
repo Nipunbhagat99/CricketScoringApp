@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+  >
 
     <EditText
         android:id="@+id/et_player_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
+        android:maxLength="30"
         android:hint="Enter Player Name"
         />
 
@@ -25,7 +27,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Batsman"
-            android:onClick="onRadioButtonClicked"
+            android:checked="true"
+
 
             />
         <RadioButton
@@ -34,7 +37,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="All-rounder"
-            android:onClick="onRadioButtonClicked"
+
+
             />
 
         <RadioButton
@@ -42,7 +46,7 @@
             android:id="@+id/radio_bowler"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonClicked"
+
             android:text="Bowler" />
     </RadioGroup>
 

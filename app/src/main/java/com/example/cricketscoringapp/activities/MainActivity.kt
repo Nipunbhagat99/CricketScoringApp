@@ -16,6 +16,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this , TeamOneActivity::class.java)
             startActivity(intent)
         }
+
+        btn_team_2.setOnClickListener {
+            val intent = Intent(this , TeamTwoActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

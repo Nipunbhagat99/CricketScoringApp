@@ -1,14 +1,9 @@
 package com.example.cricketscoringapp.activities
 
 import android.app.AlertDialog
-import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,35 +13,35 @@ import com.example.cricketscoringapp.adapters.PlayerAdapter
 import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.activity_team_one.*
+import kotlinx.android.synthetic.main.activity_team_two.*
 import kotlinx.android.synthetic.main.new_player_dialog.*
 import kotlinx.android.synthetic.main.new_player_dialog.view.*
 
-class TeamOneActivity : AppCompatActivity() {
-
+class TeamTwoActivity : AppCompatActivity() {
     private val list = ArrayList<PlayerModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_team_one)
+        setContentView(R.layout.activity_team_two)
 
 
         setUpPlayerRV()
 
-        t1_btn_new_player.setOnClickListener {
+        t2_btn_new_player.setOnClickListener {
             addNewPlayerToTeam()
         }
     }
 
     private fun setUpPlayerRV(){
-        t1_rv_add_players.layoutManager = LinearLayoutManager(this)
+        t2_rv_add_players.layoutManager = LinearLayoutManager(this)
 
         val playerAdapter = PlayerAdapter(this , getPlayerList())
 
-        t1_rv_add_players.adapter = playerAdapter
+        t2_rv_add_players.adapter = playerAdapter
 
 
         val deleteSwipeHandler = object : SwipeToDeleteCallback(this){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val adapter = t1_rv_add_players.adapter as PlayerAdapter
+                val adapter = t2_rv_add_players.adapter as PlayerAdapter
                 adapter.removeAt(viewHolder.adapterPosition)
 
 
@@ -55,7 +50,7 @@ class TeamOneActivity : AppCompatActivity() {
         }
 
         val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
-        deleteItemTouchHelper.attachToRecyclerView(t1_rv_add_players)
+        deleteItemTouchHelper.attachToRecyclerView(t2_rv_add_players)
     }
 
     private fun getPlayerList(): ArrayList<PlayerModel>{
@@ -63,7 +58,7 @@ class TeamOneActivity : AppCompatActivity() {
 
         var player = PlayerModel(
                 "Nipun",
-                    "BATSMAN"
+                "BATSMAN"
         )
         list.add(player)
 
@@ -81,10 +76,10 @@ class TeamOneActivity : AppCompatActivity() {
     private fun addNewPlayerToTeam(){
 
         val mDialogView = LayoutInflater
-                .from(this@TeamOneActivity)
+                .from(this@TeamTwoActivity)
                 .inflate(R.layout.new_player_dialog,null)
 
-        val mBuilder = AlertDialog.Builder(this@TeamOneActivity)
+        val mBuilder = AlertDialog.Builder(this@TeamTwoActivity)
                 .setView(mDialogView)
                 .setTitle("ADD A NEW PLAYER")
 
@@ -103,24 +98,24 @@ class TeamOneActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a name.." , Toast.LENGTH_SHORT).show()
             } else {
 
-            var role = ""
-            val name = mAlertDialog.et_player_name.text.toString()
-            if (mAlertDialog.radio_batsman.isChecked) {
-                role = "BATSMAN"
-            } else if (mAlertDialog.radio_all_rounder.isChecked) {
-                role = "ALL-ROUNDER"
-            } else if (mAlertDialog.radio_bowler.isChecked) {
-                role = "BOWLER"
+                var role = ""
+                val name = mAlertDialog.et_player_name.text.toString()
+                if (mAlertDialog.radio_batsman.isChecked) {
+                    role = "BATSMAN"
+                } else if (mAlertDialog.radio_all_rounder.isChecked) {
+                    role = "ALL-ROUNDER"
+                } else if (mAlertDialog.radio_bowler.isChecked) {
+                    role = "BOWLER"
+                }
+                mAlertDialog.dismiss()
+
+                val newPlayer = PlayerModel(name, role)
+
+                list.add(newPlayer)
+                t2_rv_add_players.adapter!!.notifyDataSetChanged()
+
+
             }
-            mAlertDialog.dismiss()
-
-            val newPlayer = PlayerModel(name, role)
-
-            list.add(newPlayer)
-            t1_rv_add_players.adapter!!.notifyDataSetChanged()
-
-
-        }
 
         }
 
