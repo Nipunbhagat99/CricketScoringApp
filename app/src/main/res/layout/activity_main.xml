@@ -4,6 +4,7 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/cricketbackground"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
 
@@ -15,6 +16,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         android:textSize="28sp"
+        android:textColor="@color/white"
         android:textStyle="bold"
         android:fontFamily="sans-serif"
         />
@@ -28,7 +30,8 @@
     <Button
         android:id="@+id/btn_team_1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/team_button"
         android:text="@string/btn_team_1"
         android:textSize="@dimen/btn_intro_team_text_size"
         android:layout_marginStart="40dp"
@@ -40,16 +43,18 @@
     <Button
         android:id="@+id/btn_match"
         android:layout_width="100dp"
+        app:backgroundTint="@null"
         android:layout_height="100dp"
         android:text="Start Match"
-        android:textSize="@dimen/btn_intro_team_text_size"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         android:background = "@drawable/round_button"
-        android:theme="@style/Button.Match"
         />
     <Button
         android:id="@+id/btn_team_2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/team_button"
         android:text="@string/btn_team_2"
         android:textSize="@dimen/btn_intro_team_text_size"
         android:layout_marginStart="40dp"
@@ -66,6 +71,9 @@
         android:layout_gravity="bottom"
         android:layout_weight="0"
         android:text="History"
+        android:textSize="16sp"
+        android:background="@drawable/bottom_button"
+        android:layout_marginBottom="0dp"
         android:theme="@style/Button.History"
         />
 

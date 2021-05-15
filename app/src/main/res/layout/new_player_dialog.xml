@@ -17,36 +17,48 @@
         android:id="@+id/rg_role"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
 
         >
 
         <RadioButton
-            android:layout_weight="1"
             android:id="@+id/radio_batsman"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
             android:text="Batsman"
+            android:textSize="10sp"
             android:checked="true"
 
 
             />
         <RadioButton
-            android:layout_weight="1"
+
+            android:id="@+id/radio_wk"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="Wicket-Keeper"
+            android:textSize="10sp"
+
+
+
+            />
+        <RadioButton
+
             android:id="@+id/radio_all_rounder"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
             android:text="All-rounder"
+            android:textSize="10sp"
 
 
             />
 
         <RadioButton
-            android:layout_weight="1"
-            android:id="@+id/radio_bowler"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
 
+            android:id="@+id/radio_bowler"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:textSize="10sp"
             android:text="Bowler" />
     </RadioGroup>
 

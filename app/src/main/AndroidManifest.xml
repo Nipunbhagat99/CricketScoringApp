@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CricketScoringApp">
-        <activity android:name=".activities.TeamTwoActivity"></activity>
+        <activity android:name=".activities.SquadActivity"></activity>
+        <activity android:name=".activities.MatchActivity" />
+        <activity android:name=".activities.ChooseBowlerActivity" />
+        <activity android:name=".activities.ChooseBatsmenActivity" />
+        <activity android:name=".activities.FirstBattingActivity" />
+        <activity android:name=".activities.TeamTwoActivity" />
         <activity
             android:name=".activities.TeamOneActivity"
             android:screenOrientation="portrait" />

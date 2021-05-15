@@ -1,6 +1,8 @@
 package com.example.cricketscoringapp.activities
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,29 +14,37 @@ import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.PlayerAdapter
 import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_team_one.*
 import kotlinx.android.synthetic.main.activity_team_two.*
 import kotlinx.android.synthetic.main.new_player_dialog.*
 import kotlinx.android.synthetic.main.new_player_dialog.view.*
 
 class TeamTwoActivity : AppCompatActivity() {
-    private val list = ArrayList<PlayerModel>()
+    private var list = ArrayList<PlayerModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_team_two)
 
+        loadData()
 
         setUpPlayerRV()
 
         t2_btn_new_player.setOnClickListener {
             addNewPlayerToTeam()
         }
+
+        t2_btn_submit.setOnClickListener {
+            saveData()
+
+        }
     }
 
     private fun setUpPlayerRV(){
         t2_rv_add_players.layoutManager = LinearLayoutManager(this)
 
-        val playerAdapter = PlayerAdapter(this , getPlayerList())
+        val playerAdapter = PlayerAdapter(this , list)
 
         t2_rv_add_players.adapter = playerAdapter
 
@@ -53,25 +63,41 @@ class TeamTwoActivity : AppCompatActivity() {
         deleteItemTouchHelper.attachToRecyclerView(t2_rv_add_players)
     }
 
-    private fun getPlayerList(): ArrayList<PlayerModel>{
+    private fun saveData(){
 
+        val team2Name = et_2_team_name.text.toString()
+        val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString("team_2_name", team2Name)
+        val gson = Gson()
+        val json = gson.toJson(list)
+        editor.putString("team_2" , json)
+        editor.commit()
+        Toast.makeText(this, "Team 2 has been added" , Toast.LENGTH_SHORT).show()
+        finish()
+    }
 
-        var player = PlayerModel(
-                "Nipun",
-                "BATSMAN"
-        )
-        list.add(player)
+    private  fun loadData(){
+        val empty :String= ""
+        val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val team2Name : String? = sharedPreferences.getString("team_2_name" , "").toString()
+        if(team2Name == null){
+            et_2_team_name.setText(empty)
+        }
+        else {
+            et_2_team_name.setText(team2Name)
+        }
 
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
+        val json = sharedPreferences.getString("team_2" , emptyList<PlayerModel>().toString())
+        list = Gson().fromJson(json, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
 
-        return list
+        if(list == null ){
+            list = ArrayList<PlayerModel>()
+        }
 
     }
+
+
 
     private fun addNewPlayerToTeam(){
 
@@ -107,9 +133,12 @@ class TeamTwoActivity : AppCompatActivity() {
                 } else if (mAlertDialog.radio_bowler.isChecked) {
                     role = "BOWLER"
                 }
+                else if (mAlertDialog.radio_wk.isChecked) {
+                    role = "WICKET-KEEPER"
+                }
                 mAlertDialog.dismiss()
 
-                val newPlayer = PlayerModel(name, role)
+                val newPlayer = PlayerModel(name, role,false)
 
                 list.add(newPlayer)
                 t2_rv_add_players.adapter!!.notifyDataSetChanged()

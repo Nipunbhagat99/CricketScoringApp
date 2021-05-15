@@ -1,10 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.CricketScoringApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FBD100</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">#0097FB</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
@@ -14,6 +16,10 @@
 
         <!-- Customize your theme here. -->
     </style>
+    <style name="Button.lmao" parent="Widget.AppCompat.Button">
+
+
+    </style>
 
     <style name="Button.Match" parent="Widget.AppCompat.Button">
         <item name="colorPrimary">#D84B4B</item>
@@ -22,4 +28,19 @@
     <style name="Button.History" parent="Widget.AppCompat.Button">
         <item name="colorPrimary">#127517</item>
     </style>
+    <style name="Button.Start" parent="Widget.AppCompat.Button">
+        <item name="colorPrimary">#123456</item>
+    </style>
+
+    <style name="CustomTabStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+
+    <style name="tv.versus" parent="Widget.AppCompat.TextView">
+        <item name="colorPrimary">#0097FB</item>
+    </style>
+
+
+
 </resources>

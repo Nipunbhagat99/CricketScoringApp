@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.SquadsFragment"
+    android:orientation="vertical">
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Button.Start"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_squad"
+        android:text="TEAM 1"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/btn_squad_1"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Button.Start"
+        android:textColor="@color/white"
+        android:text="TEAM 2"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:id="@+id/btn_squad_2"
+        android:background="@drawable/btn_squad"
+        />
+
+</LinearLayout>

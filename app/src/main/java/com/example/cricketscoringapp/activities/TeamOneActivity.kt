@@ -2,6 +2,8 @@ package com.example.cricketscoringapp.activities
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,29 +20,39 @@ import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.PlayerAdapter
 import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_team_one.*
+import kotlinx.android.synthetic.main.activity_team_two.*
 import kotlinx.android.synthetic.main.new_player_dialog.*
 import kotlinx.android.synthetic.main.new_player_dialog.view.*
+import java.lang.reflect.Type
 
 class TeamOneActivity : AppCompatActivity() {
 
-    private val list = ArrayList<PlayerModel>()
+    private var list = ArrayList<PlayerModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_team_one)
 
+        loadData()
 
         setUpPlayerRV()
 
         t1_btn_new_player.setOnClickListener {
             addNewPlayerToTeam()
         }
+
+        t1_btn_submit.setOnClickListener {
+            saveData()
+
+        }
     }
 
     private fun setUpPlayerRV(){
         t1_rv_add_players.layoutManager = LinearLayoutManager(this)
 
-        val playerAdapter = PlayerAdapter(this , getPlayerList())
+        val playerAdapter = PlayerAdapter(this , list)
 
         t1_rv_add_players.adapter = playerAdapter
 
@@ -58,23 +71,38 @@ class TeamOneActivity : AppCompatActivity() {
         deleteItemTouchHelper.attachToRecyclerView(t1_rv_add_players)
     }
 
-    private fun getPlayerList(): ArrayList<PlayerModel>{
 
+    private fun saveData(){
 
-        var player = PlayerModel(
-                "Nipun",
-                    "BATSMAN"
-        )
-        list.add(player)
+        val team1Name = et_1_team_name.text.toString()
+        val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString("team_1_name", team1Name)
+        val gson = Gson()
+        val json = gson.toJson(list)
+        editor.putString("team_1" , json)
+        editor.commit()
+        Toast.makeText(this, "Team 1 has been added" , Toast.LENGTH_SHORT).show()
+        finish()
+    }
 
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
-        player = PlayerModel("Chhibber" , "ALL-ROUNDER")
-        list.add(player)
+    private  fun loadData(){
+        val empty :String= ""
+        val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val team1Name : String? = sharedPreferences.getString("team_1_name" , "").toString()
+        if(team1Name == null){
+            et_1_team_name.setText(empty)
+        }
+        else {
+            et_1_team_name.setText(team1Name)
+        }
 
-        return list
+        val json = sharedPreferences.getString("team_1" , emptyList<PlayerModel>().toString())
+        list = Gson().fromJson(json, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+
+        if(list == null ){
+            list = ArrayList<PlayerModel>()
+        }
 
     }
 
@@ -87,6 +115,7 @@ class TeamOneActivity : AppCompatActivity() {
         val mBuilder = AlertDialog.Builder(this@TeamOneActivity)
                 .setView(mDialogView)
                 .setTitle("ADD A NEW PLAYER")
+                
 
 
 
@@ -112,9 +141,12 @@ class TeamOneActivity : AppCompatActivity() {
             } else if (mAlertDialog.radio_bowler.isChecked) {
                 role = "BOWLER"
             }
+            else if (mAlertDialog.radio_wk.isChecked) {
+                role = "WICKET-KEEPER"
+            }
             mAlertDialog.dismiss()
 
-            val newPlayer = PlayerModel(name, role)
+            val newPlayer = PlayerModel(name, role,false,0)
 
             list.add(newPlayer)
             t1_rv_add_players.adapter!!.notifyDataSetChanged()

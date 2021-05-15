@@ -1,0 +1,81 @@
+package com.example.cricketscoringapp.activities
+
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cricketscoringapp.R
+import com.example.cricketscoringapp.adapters.ChooseBatsmenAdapter
+import com.example.cricketscoringapp.adapters.PlayerAdapter
+import com.example.cricketscoringapp.models.PlayerModel
+import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_choose_batsmen.*
+import kotlinx.android.synthetic.main.activity_team_one.*
+
+class ChooseBatsmenActivity : AppCompatActivity() {
+
+    var teamNo =0
+    private var list = ArrayList<PlayerModel>()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_choose_batsmen)
+        teamNo = intent.getIntExtra("team_no",0)
+        getList(teamNo)
+        rv_choose_batsmen.layoutManager = LinearLayoutManager(this)
+
+        val chooseBatsmenAdapter = ChooseBatsmenAdapter(this ,list )
+
+        rv_choose_batsmen.adapter = chooseBatsmenAdapter
+
+
+
+        btn_next_choose_bowlers.setOnClickListener {
+
+
+            val remainingBatsmen : ArrayList<PlayerModel> = chooseBatsmenAdapter.goNext()
+
+            if(remainingBatsmen.size != 0){
+            val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+            val editor : SharedPreferences.Editor = sharedPreferences.edit()
+            val gson = Gson()
+            val json = gson.toJson(remainingBatsmen)
+            editor.putString("remainingBatsmen" , json)
+            editor.commit()
+            val intent = Intent(this , ChooseBowlerActivity::class.java)
+            if(teamNo==1){
+                teamNo=2
+            }
+            else if(teamNo==2){
+                teamNo=1
+            }
+            intent.putExtra("team_no" , teamNo)
+            startActivity(intent)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            finish()}
+            else{
+                Toast.makeText(this, "Please Select 2 players" , Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+    }
+
+
+
+    private fun getList(x : Int){
+        val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val battingTeam = sharedPreferences.getString("team_$x", emptyList<PlayerModel>().toString())
+        list = Gson().fromJson(battingTeam, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+        rv_choose_batsmen.adapter?.notifyDataSetChanged()
+
+    }
+}

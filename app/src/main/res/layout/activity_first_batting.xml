@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.FirstBattingActivity">
+
+    <TextView
+
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Which team will bat first ?"
+        android:textSize="30sp"
+
+        />
+
+    <TextView
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:id="@+id/tv_batting_team_1"
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:text="TEAM 1"
+        android:textSize="30sp"
+        android:background="@drawable/team_player_list"
+
+        />
+
+    <TextView
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:id="@+id/tv_batting_team_2"
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        tools:text="TEAM 2"
+        android:textSize="30sp"
+        android:background="@drawable/team_player_list"
+
+        />
+</LinearLayout>
