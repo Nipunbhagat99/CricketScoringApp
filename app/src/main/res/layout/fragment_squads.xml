@@ -15,9 +15,9 @@
         android:background="@drawable/btn_squad"
         android:text="TEAM 1"
         android:textAlignment="textStart"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="3dp"
         android:id="@+id/btn_squad_1"
         />
 
@@ -28,7 +28,7 @@
         android:textColor="@color/white"
         android:text="TEAM 2"
         android:textAlignment="textStart"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:id="@+id/btn_squad_2"
         android:background="@drawable/btn_squad"
         />

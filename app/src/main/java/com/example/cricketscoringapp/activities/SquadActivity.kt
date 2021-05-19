@@ -13,44 +13,55 @@ import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.activity_squad.*
 import kotlinx.android.synthetic.main.activity_team_one.*
 
 class SquadActivity : AppCompatActivity() {
 
     private var list = ArrayList<PlayerModel>()
     private var teamNo = 0
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_squad)
         teamNo = intent.getIntExtra("team_no",1)
         loadData()
+        setSupportActionBar(tb_squad)
+        supportActionBar?.apply {
+
+            val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , MODE_PRIVATE)
+            val teamName : String? = sharedPreferences.getString("team_${teamNo}_name" , "").toString()
+            if (teamName != null) {
+                title = teamName.uppercase()
+            }
+
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+
+        }
+        tb_squad.setNavigationIcon(R.drawable.back_button_image)
+        tb_squad.setNavigationOnClickListener {
+            onBackPressed()
+        }
 
         setUpPlayerRV()
     }
 
 
     private fun setUpPlayerRV(){
-        t1_rv_add_players.layoutManager = LinearLayoutManager(this)
+        rv_squad.layoutManager = LinearLayoutManager(this)
 
         val playerAdapter = PlayerAdapter(this , list)
 
-        t1_rv_add_players.adapter = playerAdapter
+        rv_squad.adapter = playerAdapter
 
 
     }
 
     private  fun loadData(){
-        val empty :String= ""
         val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
-        val team1Name : String? = sharedPreferences.getString("team_1_name" , "").toString()
-        if(team1Name == null){
-            et_1_team_name.setText(empty)
-        }
-        else {
-            et_1_team_name.setText(team1Name)
-        }
 
-        val json = sharedPreferences.getString("team_1" , emptyList<PlayerModel>().toString())
+        val json = sharedPreferences.getString("team_$teamNo" , emptyList<PlayerModel>().toString())
         list = Gson().fromJson(json, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
 
         if(list == null ){

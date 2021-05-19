@@ -35,6 +35,7 @@
             app:tabMode="fixed"
             app:tabTextColor="@color/white"
             android:id="@+id/tabs"
+
             />
 
 
