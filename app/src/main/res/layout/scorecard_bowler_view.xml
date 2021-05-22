@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:background="@drawable/over_boundary_background"
+    >
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_name"
+        android:layout_weight="6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Bowler Name"
+        android:paddingStart="25dp"
+        android:textColor="#004187"
+        />
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_overs"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="10"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_maiden_overs"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_runs"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="65"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_wickets"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="3"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/tv_scorecard_bowler_economy_rate"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="6.5"
+        android:gravity="center"
+        />
+</LinearLayout>

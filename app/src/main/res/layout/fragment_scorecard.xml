@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ScorecardFragment">
+    tools:context=".fragments.ScorecardFragment"
+    android:background="#EFEFEF"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SCORECARD" />
+        android:id="@+id/rv_scorecard"
+        />
 
 </FrameLayout>

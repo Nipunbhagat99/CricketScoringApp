@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/over_boundary_background"
+    >
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:paddingBottom="10dp"
+android:paddingTop="10dp"
+
+    >
+<TextView
+    android:id="@+id/tv_scorecard_batsman_name"
+    android:layout_weight="6"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="Batsman Name"
+    android:paddingStart="25dp"
+    android:textColor="#004187"
+
+    />
+<TextView
+    android:id="@+id/tv_scorecard_batsman_runs"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="100"
+    android:gravity="center"
+    android:textStyle="bold"
+    />
+<TextView
+    android:id="@+id/tv_scorecard_batsman_balls"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="97"
+    android:gravity="center"
+    />
+<TextView
+    android:id="@+id/tv_scorecard_batsman_fours"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="7"
+    android:gravity="center"
+    />
+<TextView
+    android:id="@+id/tv_scorecard_batsman_sixes"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="3"
+    android:gravity="center"
+    />
+<TextView
+    android:id="@+id/tv_scorecard_batsman_strike_rate"
+    android:layout_weight="2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:text="23.34"
+    android:gravity="center"
+    />
+</LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_scorecard_wicket_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="b Wright"
+        android:paddingStart="25dp"
+        android:paddingBottom="5dp"
+        />
+</LinearLayout>
