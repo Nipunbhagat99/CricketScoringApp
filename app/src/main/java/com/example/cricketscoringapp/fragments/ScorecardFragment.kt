@@ -1,24 +1,25 @@
 package com.example.cricketscoringapp.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cricketscoringapp.R
-import com.example.cricketscoringapp.adapters.OversAdapter
 import com.example.cricketscoringapp.adapters.ScorecardAdapter
 import com.example.cricketscoringapp.models.*
-import kotlinx.android.synthetic.main.fragment_overs.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_scorecard.*
 
 
 class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
 
-    private var list = ArrayList<ScorecardModel>()
-    private var batsmenList = ArrayList<BatsmanModel>()
-    private var bowlersList = ArrayList<BowlerModel>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,10 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
 
     private fun setupOversRV(){
 
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+
         rv_scorecard.layoutManager = LinearLayoutManager(this.activity)
 
         val scorecardAdapter = this.activity?.let { ScorecardAdapter(it, list, this) }
@@ -54,24 +59,30 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
     }
 
     private fun setupScorecardList(){
-        val rahul = BatsmanModel("Rahul ", "Lmao" ,120,134,95.43, 7,7,"c Kohli b Kumar")
-        batsmenList.add(rahul)
-        batsmenList.add(rahul)
-        batsmenList.add(rahul)
-        batsmenList.add(rahul)
-        val nalin = BowlerModel("Nalin" , "LOL" , 56 , 3 ,5.60, 10 , 1)
-        bowlersList.add(nalin)
-        bowlersList.add(nalin)
-        bowlersList.add(nalin)
-        bowlersList.add(nalin)
-        var scorecard = ScorecardModel("Lmao" , 230 , 4 , 250 , batsmenList, bowlersList , true)
-        var scorecard1 = ScorecardModel("Lmao" , 230 , 4 , 250 , batsmenList, bowlersList , false)
-        var scorecard2 = ScorecardModel("Lmao" , 230 , 4 , 250 , batsmenList, bowlersList , false)
-        var scorecard3 = ScorecardModel("Lmao" , 230 , 4 , 250 , batsmenList, bowlersList , false)
-        list.add(scorecard)
-        list.add(scorecard1)
-        list.add(scorecard2)
-        list.add(scorecard3)
+        val list = ArrayList<ScorecardModel>()
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        val batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val batsman2JSON = sharedPreferences.getString("batsman2","")
+        val batsman2 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val batsmanList = ArrayList<BatsmanModel>()
+        batsmanList.add(batsman1)
+        batsmanList.add(batsman2)
+
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        val bowlerList = ArrayList<BowlerModel>()
+        bowlerList.add(bowler)
+        val firstBatting = sharedPreferences.getInt("first_batting", 1)
+        val teamName = sharedPreferences.getString("team_${firstBatting}_name", "")
+        val scorecardModel = ScorecardModel(teamName,0,0,0,batsmanList,bowlerList,true)
+
+        list.add(scorecardModel)
+
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+        editor.commit()
 
 
     }
@@ -79,6 +90,7 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
     override fun onItemClicked(items: ArrayList<ScorecardModel>, position: Int) {
         super.onItemClicked(items, position)
         items[position].expanded = !items[position].expanded
+        TransitionManager.beginDelayedTransition(rv_scorecard)
         rv_scorecard.adapter?.notifyDataSetChanged()
 
     }

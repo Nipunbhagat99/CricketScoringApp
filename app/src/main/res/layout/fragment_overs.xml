@@ -11,5 +11,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/rv_overs"
         />
+    <TextView
+        android:id="@+id/tv_overs_no_balls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Balls have been bowled yet"
+        />
 
 </FrameLayout>

@@ -68,7 +68,7 @@ class TeamTwoActivity : AppCompatActivity() {
         val team2Name = et_2_team_name.text.toString()
         val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putString("team_2_name", team2Name)
+        editor.putString("team_2_name", team2Name.toUpperCase())
         val gson = Gson()
         val json = gson.toJson(list)
         editor.putString("team_2" , json)

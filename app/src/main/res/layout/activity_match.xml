@@ -15,6 +15,7 @@
 
         >
         <TextView
+            android:id="@+id/tv_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -31,11 +32,11 @@
             android:layout_height="wrap_content"
             app:tabTextAppearance="@style/CustomTabStyle"
             app:tabBackground="@color/colorPrimaryDark"
-            app:tabGravity="fill"
-            app:tabMode="fixed"
             app:tabTextColor="@color/white"
+            app:tabIndicatorColor="@android:color/white"
             android:id="@+id/tabs"
-
+            app:tabPaddingStart="-1dp"
+            app:tabPaddingEnd="-1dp"
             />
 
 

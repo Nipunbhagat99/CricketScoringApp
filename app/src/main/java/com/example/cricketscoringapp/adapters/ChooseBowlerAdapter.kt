@@ -45,22 +45,23 @@ class ChooseBowlerAdapter(private val context : Context,private val list : Array
         return list.size
     }
 
-    fun goNext(): ArrayList<PlayerModel>{
+    fun goNext(): String{
+        var name = ""
 
         if(count!=1){
-            return ArrayList<PlayerModel>()
+            return name
         }
         var x = checkBoxStateArray.size()
         x--
         for( i in 0..x){
             if(checkBoxStateArray.get(i,false)){
-                    list[i].oversBowled++
+                    name = list[i].name.toString()
                     break
             }
 
         }
 
-        return list
+        return name
     }
 
 

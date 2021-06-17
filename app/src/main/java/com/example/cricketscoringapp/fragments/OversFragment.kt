@@ -1,5 +1,7 @@
 package com.example.cricketscoringapp.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,20 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.OversAdapter
 import com.example.cricketscoringapp.models.OverModel
+import com.example.cricketscoringapp.models.PlayerModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_squad.rv_squad
 import kotlinx.android.synthetic.main.fragment_overs.*
 
 class OversFragment : Fragment() {
 
-    private var list = ArrayList<OverModel>()
-    private var balls = ArrayList<String>()
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupOverList()
+
 
     }
 
@@ -44,32 +44,34 @@ class OversFragment : Fragment() {
 
 
     private fun setupOverList(){
-        balls.add("1")
-        balls.add("2")
-        balls.add("6")
-        balls.add("4")
-        balls.add("W")
-        balls.add("W")
-        var over = OverModel(1,13, balls)
+
+        var over = OverModel(1,0, ArrayList<String>())
+        var list = ArrayList<OverModel>()
         list.add(over)
-        over = OverModel(2,13, balls)
-        list.add(over)
-        over = OverModel(3,13, balls)
-        list.add(over)
-        over = OverModel(4,13, balls)
-        list.add(over)
-        over = OverModel(5,13, balls)
-        list.add(over)
+        list[0]
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        val gson = Gson()
+        val overListJson = gson.toJson(list)
+        editor.putString("over_list", overListJson)
+
+
     }
 
     private fun setupOversRV(){
 
         rv_overs.layoutManager = LinearLayoutManager(this.activity)
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val overListJson = sharedPreferences.getString("over_list", emptyList<PlayerModel>().toString())
+        val list  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
 
         val overAdapter = this.activity?.let { OversAdapter(it, list) }
 
         rv_overs.adapter = overAdapter
 
+        if(list.size>0){
+            tv_overs_no_balls.visibility = View.GONE
+        }
 
     }
 

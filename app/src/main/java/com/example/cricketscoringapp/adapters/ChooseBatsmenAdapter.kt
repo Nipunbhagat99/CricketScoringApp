@@ -1,21 +1,28 @@
 package com.example.cricketscoringapp.adapters
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cricketscoringapp.R
+import com.example.cricketscoringapp.models.BatsmanModel
 import com.example.cricketscoringapp.models.PlayerModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import kotlinx.android.synthetic.main.batsman_checkbox_view.view.*
+import kotlinx.android.synthetic.main.match_start_bottom_sheet.*
 
 class ChooseBatsmenAdapter(private val context : Context,private val list : ArrayList<PlayerModel>): RecyclerView.Adapter<ChooseBatsmenAdapter.ViewHolder>(){
 
     var checkBoxStateArray = SparseBooleanArray()
     var count = 0
+    lateinit var batsman1 : String
+    lateinit var batsman2 : String
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return ViewHolder(
@@ -56,10 +63,12 @@ class ChooseBatsmenAdapter(private val context : Context,private val list : Arra
         for( i in 0..x){
             if(checkBoxStateArray.get(i,false)){
                 if(y==0){
+                    batsman1 = list[i].name.toString()
                     list.removeAt(i)
                     y++
                     }
                 else{
+                    batsman2 = list[i-1].name.toString()
                     list.removeAt(i-1)
                 }
 
@@ -71,12 +80,15 @@ class ChooseBatsmenAdapter(private val context : Context,private val list : Arra
     }
 
 
+
+
    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         var checkbox: MaterialCheckBox = itemView.cb_batsman
 
         init {
 
             checkbox.setOnClickListener {
+
                 if(!checkBoxStateArray.get(adapterPosition,false)){
                     checkBoxStateArray.put(adapterPosition,true)
                     count++

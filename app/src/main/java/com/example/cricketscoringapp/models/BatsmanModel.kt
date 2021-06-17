@@ -9,4 +9,8 @@ class BatsmanModel(
         var fours : Int,
         var sixes: Int,
         var wicket : String,
-)
+        var notOut : Boolean
+
+){
+       var strike :Boolean = false
+}

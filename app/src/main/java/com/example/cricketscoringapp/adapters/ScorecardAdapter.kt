@@ -70,7 +70,7 @@ class ScorecardAdapter (private val context : Context, private val list : ArrayL
                 if (item.expanded) {
                     itemView.ll_scorecard_main.visibility = View.VISIBLE
                     itemView.ll_scorecard_heading.background = Color.parseColor("#123456").toDrawable()
-
+                    itemView.iv_scorecard_arrow.setImageResource(R.drawable.up_arrow_white)
                     itemView.tv_scorecard_team_name.setTextColor(Color.parseColor("#ffffff"))
                     itemView.tv_scorecard_team_score.setTextColor(Color.parseColor("#ffffff"))
 
@@ -78,6 +78,7 @@ class ScorecardAdapter (private val context : Context, private val list : ArrayL
                     itemView.ll_scorecard_main.visibility = View.GONE
                     itemView.ll_scorecard_heading.background = Color.parseColor("#ffffff").toDrawable()
                     itemView.tv_scorecard_team_name.setTextColor(Color.parseColor("#000000"))
+                    itemView.iv_scorecard_arrow.setImageResource(R.drawable.down_arrow_grey)
                     itemView.tv_scorecard_team_score.setTextColor(Color.parseColor("#000000"))
                 }
 

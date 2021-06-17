@@ -77,7 +77,7 @@ class TeamOneActivity : AppCompatActivity() {
         val team1Name = et_1_team_name.text.toString()
         val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putString("team_1_name", team1Name)
+        editor.putString("team_1_name", team1Name.toUpperCase())
         val gson = Gson()
         val json = gson.toJson(list)
         editor.putString("team_1" , json)
@@ -146,7 +146,7 @@ class TeamOneActivity : AppCompatActivity() {
             }
             mAlertDialog.dismiss()
 
-            val newPlayer = PlayerModel(name, role,false,0)
+            val newPlayer = PlayerModel(name, role,false)
 
             list.add(newPlayer)
             t1_rv_add_players.adapter!!.notifyDataSetChanged()

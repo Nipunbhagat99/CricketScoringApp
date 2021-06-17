@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ChooseBatsmenAdapter
 import com.example.cricketscoringapp.adapters.PlayerAdapter
+import com.example.cricketscoringapp.models.BatsmanModel
 import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.SwipeToDeleteCallback
 import com.google.gson.Gson
@@ -24,11 +25,13 @@ class ChooseBatsmenActivity : AppCompatActivity() {
 
     var teamNo =0
     private var list = ArrayList<PlayerModel>()
+    private var teamName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_batsmen)
         teamNo = intent.getIntExtra("team_no",0)
         getList(teamNo)
+
         rv_choose_batsmen.layoutManager = LinearLayoutManager(this)
 
         val chooseBatsmenAdapter = ChooseBatsmenAdapter(this ,list )
@@ -43,19 +46,28 @@ class ChooseBatsmenActivity : AppCompatActivity() {
             val remainingBatsmen : ArrayList<PlayerModel> = chooseBatsmenAdapter.goNext()
 
             if(remainingBatsmen.size != 0){
-            val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
-            val editor : SharedPreferences.Editor = sharedPreferences.edit()
-            val gson = Gson()
-            val json = gson.toJson(remainingBatsmen)
-            editor.putString("remainingBatsmen" , json)
-            editor.commit()
-            val intent = Intent(this , ChooseBowlerActivity::class.java)
-            if(teamNo==1){
+                val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+                val editor : SharedPreferences.Editor = sharedPreferences.edit()
+                val gson = Gson()
+                val json = gson.toJson(remainingBatsmen)
+                editor.putString("remainingBatsmen" , json)
+                val batsman1Name = chooseBatsmenAdapter.batsman1
+                val batsman2Name = chooseBatsmenAdapter.batsman2
+                var batsman1 = BatsmanModel(batsman1Name, teamName , 0 , 0,0.00, 0, 0, "" ,true )
+                val batsman2 = BatsmanModel(batsman2Name, teamName , 0 , 0,0.00, 0, 0, "" ,true )
+                val batsman1Gson = gson.toJson(batsman1)
+                val batsman2Gson = gson.toJson(batsman2)
+                editor.putString("batsman1" , batsman1Gson)
+                editor.putString("batsman2" , batsman2Gson)
+                editor.commit()
+                val intent = Intent(this , ChooseBowlerActivity::class.java)
+                if(teamNo==1){
                 teamNo=2
             }
             else if(teamNo==2){
                 teamNo=1
             }
+
             intent.putExtra("team_no" , teamNo)
             startActivity(intent)
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -76,6 +88,8 @@ class ChooseBatsmenActivity : AppCompatActivity() {
         val battingTeam = sharedPreferences.getString("team_$x", emptyList<PlayerModel>().toString())
         list = Gson().fromJson(battingTeam, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
         rv_choose_batsmen.adapter?.notifyDataSetChanged()
+        teamName = sharedPreferences.getString("team_${x}_name" , "lol").toString()
+
 
     }
 }

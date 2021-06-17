@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             editor.commit()
             val intent = Intent(this , FirstBattingActivity::class.java)
             startActivity(intent)
-
+            dialog.dismiss()
         }
         dialog.show()
 
