@@ -21,8 +21,6 @@ class OversFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupOverList()
-
 
     }
 
@@ -43,27 +41,13 @@ class OversFragment : Fragment() {
     }
 
 
-    private fun setupOverList(){
-
-        var over = OverModel(1,0, ArrayList<String>())
-        var list = ArrayList<OverModel>()
-        list.add(over)
-        list[0]
-        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
-        val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        val gson = Gson()
-        val overListJson = gson.toJson(list)
-        editor.putString("over_list", overListJson)
-
-
-    }
 
     private fun setupOversRV(){
 
         rv_overs.layoutManager = LinearLayoutManager(this.activity)
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
-        val overListJson = sharedPreferences.getString("over_list", emptyList<PlayerModel>().toString())
-        val list  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+        val overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
+        val list  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
 
         val overAdapter = this.activity?.let { OversAdapter(it, list) }
 

@@ -1,7 +1,7 @@
 package com.example.cricketscoringapp.models
 
 class BatsmanModel(
-        val name : String?,
+        var name : String?,
         val team : String?,
         var runs : Int,
         var ballsFaced : Int,

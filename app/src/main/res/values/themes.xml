@@ -38,7 +38,12 @@
 
 
     <style name="tv.versus" parent="Widget.AppCompat.TextView">
-        <item name="colorPrimary">#0097FB</item>
+        <item name="colorPrimary">#00A6FF</item>
+    </style>
+
+    <style name="Button.Player" parent="Widget.AppCompat.Button">
+
+        <item name="colorPrimary">#00A6FF</item>
     </style>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat">

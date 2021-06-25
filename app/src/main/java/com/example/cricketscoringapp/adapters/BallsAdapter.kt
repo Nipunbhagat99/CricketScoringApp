@@ -30,9 +30,13 @@ class BallsAdapter(private val context : Context, private val list : ArrayList<S
         if (holder is ViewHolder) {
             holder.itemView.tvball.text = model
             when(model){
-                "W" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#f05b5b"))
-                "4" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#00d0ff"))
-                "6" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#ffa3f3"))
+                "W" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#e33636"))
+                "4" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#14b7db"))
+                "6" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#cf61c0"))
+                "1" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
+                "2" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
+                "3" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
+
             }
 
         }}

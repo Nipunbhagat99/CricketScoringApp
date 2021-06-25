@@ -2,6 +2,7 @@ package com.example.cricketscoringapp.adapters
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,12 @@ import kotlinx.android.synthetic.main.batsman_checkbox_view.view.*
 class ChooseBowlerAdapter(private val context : Context,private val list : ArrayList<PlayerModel>): RecyclerView.Adapter<ChooseBowlerAdapter.ViewHolder>(){
 
     var checkBoxStateArray = SparseBooleanArray()
+
     var count = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+        for( i in 0..list.size){
+            checkBoxStateArray.put(i,false)
+        }
         return ViewHolder(
             LayoutInflater.from(context).inflate(
                 R.layout.batsman_checkbox_view,
@@ -47,6 +51,7 @@ class ChooseBowlerAdapter(private val context : Context,private val list : Array
 
     fun goNext(): String{
         var name = ""
+        Log.i("count" , "$checkBoxStateArray + count $count")
 
         if(count!=1){
             return name
@@ -55,11 +60,15 @@ class ChooseBowlerAdapter(private val context : Context,private val list : Array
         x--
         for( i in 0..x){
             if(checkBoxStateArray.get(i,false)){
-                    name = list[i].name.toString()
+                Log.i("count" , "$i i")
+                name = list[i].name.toString()
+                Log.i("count" , "$name name")
                     break
             }
 
         }
+
+
 
         return name
     }

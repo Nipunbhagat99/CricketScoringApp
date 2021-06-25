@@ -64,7 +64,7 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
         val batsman1JSON = sharedPreferences.getString("batsman1", "")
         val batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
         val batsman2JSON = sharedPreferences.getString("batsman2","")
-        val batsman2 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
         val batsmanList = ArrayList<BatsmanModel>()
         batsmanList.add(batsman1)
         batsmanList.add(batsman2)

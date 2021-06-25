@@ -24,7 +24,9 @@ class ChooseBatsmenAdapter(private val context : Context,private val list : Arra
     lateinit var batsman1 : String
     lateinit var batsman2 : String
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+        for( i in 0..list.size){
+            checkBoxStateArray.put(i,false)
+        }
         return ViewHolder(
                 LayoutInflater.from(context).inflate(
                         R.layout.batsman_checkbox_view,

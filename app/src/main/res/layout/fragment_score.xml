@@ -52,12 +52,11 @@
                 android:textSize="22sp" />
 
             <LinearLayout
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingEnd="20dp"
                 android:id="@+id/ll_score_crr"
                 >
 
@@ -75,7 +74,7 @@
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="7.63"
+                    android:text="17.63"
                     android:textColor="@color/black"
                     android:textSize="14sp"
 
@@ -85,16 +84,16 @@
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_req"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingStart="20dp"
+
                 >
 
                 <TextView
-                    android:gravity="start"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="REQ"
@@ -105,7 +104,7 @@
 
                 <TextView
                     android:id="@+id/tv_score_req"
-                    android:gravity="start"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="0.00"

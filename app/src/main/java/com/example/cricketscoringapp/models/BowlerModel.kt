@@ -6,6 +6,6 @@ class BowlerModel (
         var runsconceded : Int,
         var wickets : Int,
         var eco : Double,
-        var overs : Int,
+        var balls : Int,
         var maidens: Int
 )

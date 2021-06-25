@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ChooseBatsmenAdapter
@@ -36,6 +37,7 @@ class ChooseBowlerActivity : AppCompatActivity() {
             val gson = Gson()
             val bowlerName  = chooseBowlerAdapter.goNext()
             val bowler = BowlerModel(bowlerName,teamName,0,0,0.00,0,0 )
+            Log.i("bowler", "bowler $bowlerName")
             val bowlerList = ArrayList<BowlerModel>()
             bowlerList.add(bowler)
             val bowlerHash = HashMap<String ,Int>()

@@ -30,7 +30,9 @@ class ScorecardBowlersAdapter (private val context : Context, private val list :
         val model = list[position]
         if (holder is ViewHolder) {
             holder.itemView.tv_scorecard_bowler_name.text = model.name
-            holder.itemView.tv_scorecard_bowler_overs.text = model.overs.toString()
+            val overs = model.balls/6
+            val balls = model.balls%6
+            holder.itemView.tv_scorecard_bowler_overs.text = "$overs.$balls"
             holder.itemView.tv_scorecard_bowler_maiden_overs.text = model.maidens.toString()
             holder.itemView.tv_scorecard_bowler_runs.text = model.runsconceded.toString()
             holder.itemView.tv_scorecard_bowler_wickets.text = model.wickets.toString()

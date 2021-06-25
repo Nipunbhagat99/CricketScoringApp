@@ -35,11 +35,13 @@ class OversAdapter(private val context: Context, private val list: ArrayList<Ove
         val model = list[position]
         if (holder is ViewHolder) {
 
+            if(model.balls != null){
             holder.itemView.rv_balls.layoutManager = LinearLayoutManager(holder.itemView.context,LinearLayoutManager.HORIZONTAL,false)
 
-            val ballAdapter = BallsAdapter(holder.itemView.context,model.balls )
+            val ballAdapter = BallsAdapter(holder.itemView.context,model?.balls )
 
             holder.itemView.rv_balls.adapter = ballAdapter
+                }
 
             holder.itemView.tv_over_number.text = "Over ${model.number}"
             holder.itemView.tv_over_runs.text = "${model.runs} runs"

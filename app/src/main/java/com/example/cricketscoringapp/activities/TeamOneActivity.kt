@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -114,13 +116,9 @@ class TeamOneActivity : AppCompatActivity() {
 
         val mBuilder = AlertDialog.Builder(this@TeamOneActivity)
                 .setView(mDialogView)
-                .setTitle("ADD A NEW PLAYER")
-                
-
-
-
 
         val mAlertDialog = mBuilder.show()
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         mDialogView.btn_cancel.setOnClickListener {
             mAlertDialog.dismiss()
