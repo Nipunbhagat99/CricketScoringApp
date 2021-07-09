@@ -20,13 +20,13 @@ import kotlinx.android.synthetic.main.fragment_scorecard.*
 class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupScorecardList()
 
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +40,11 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
         super.onViewCreated(view, savedInstanceState)
         setupOversRV()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        rv_scorecard.adapter?.notifyDataSetChanged()
     }
 
 
@@ -75,7 +80,7 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
         bowlerList.add(bowler)
         val firstBatting = sharedPreferences.getInt("first_batting", 1)
         val teamName = sharedPreferences.getString("team_${firstBatting}_name", "")
-        val scorecardModel = ScorecardModel(teamName,0,0,0,batsmanList,bowlerList,true)
+        val scorecardModel = ScorecardModel(teamName,0,0,0,batsmanList,bowlerList,true,0,1,0)
 
         list.add(scorecardModel)
 
@@ -94,6 +99,12 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
         rv_scorecard.adapter?.notifyDataSetChanged()
 
     }
+
+    fun refresh(){
+        setupOversRV()
+    }
+
+
 
 
 }

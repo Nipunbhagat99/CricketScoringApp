@@ -29,6 +29,10 @@ class BallsAdapter(private val context : Context, private val list : ArrayList<S
         val model = list[position]
         if (holder is ViewHolder) {
             holder.itemView.tvball.text = model
+            var wide = Regex("Wd")
+            var wicket = Regex("W")
+            var byes = Regex("B")
+
             when(model){
                 "W" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#e33636"))
                 "4" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#14b7db"))
@@ -36,7 +40,15 @@ class BallsAdapter(private val context : Context, private val list : ArrayList<S
                 "1" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
                 "2" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
                 "3" -> holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#26ab62"))
-
+            }
+            if(wide.containsMatchIn(model)){
+                holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#e8c846"))
+            }
+            else if(wicket.containsMatchIn(model)){
+                holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#e33636"))
+            }
+            else if(byes.containsMatchIn(model)){
+                holder.itemView.tvball.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#e8c846"))
             }
 
         }}

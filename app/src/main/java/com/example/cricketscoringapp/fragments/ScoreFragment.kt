@@ -1,45 +1,46 @@
 package com.example.cricketscoringapp.fragments
 
 import android.app.AlertDialog
-
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ChooseBowlerAdapter
-import com.example.cricketscoringapp.models.BatsmanModel
-import com.example.cricketscoringapp.models.BowlerModel
-import com.example.cricketscoringapp.models.OverModel
-import com.example.cricketscoringapp.models.PlayerModel
-
+import com.example.cricketscoringapp.models.*
+import com.example.cricketscoringapp.utils.RefreshInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.choose_bowler_dialog.*
-
 import kotlinx.android.synthetic.main.fragment_score.*
+import kotlinx.android.synthetic.main.fragment_scorecard.*
 import kotlinx.android.synthetic.main.select_batsman_on_strike_dialog.*
 import kotlinx.android.synthetic.main.select_batsman_on_strike_dialog.view.*
 import kotlin.math.floor
 
 
 class ScoreFragment : Fragment(){
-
-
+    private lateinit var ri : RefreshInterface
+    private var wide = 0
+    private var byes = 0
+    private var legByes = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeScore()
         getBatsmanOnStrike()
 
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,30 +55,100 @@ class ScoreFragment : Fragment(){
 
         setupScore()
 
-        btn_dot.setOnClickListener {
-            addRuns(0)
+
+            btn_dot.setOnClickListener {
+                if(wide==1){
+                    addWideRuns(0)
+                }
+                else{
+                    addRuns(0)
+                }
+
         }
 
         btn_one.setOnClickListener {
-            addRuns(1)
+            if(wide==1){
+                addWideRuns(1)
+            }
+            else if(byes==1){
+                addByesRuns(1)
+            }
+            else if(legByes==1){
+                addByesRuns(1)
+            }
+            else{
+                addRuns(1)
+            }
         }
 
         btn_two.setOnClickListener {
-            addRuns(2)
+            if(wide==1){
+                addWideRuns(2)
+            }
+            else if(byes==1){
+                addByesRuns(2)
+            }
+            else if(legByes==1){
+                addByesRuns(2)
+            }
+            else{
+                addRuns(2)
+            }
         }
 
         btn_three.setOnClickListener {
-            addRuns(3)
+            if(wide==1){
+                addWideRuns(3)
+            }
+            else if(byes==1){
+                addByesRuns(3)
+            }
+            else if(legByes==1){
+                addByesRuns(3)
+            }
+            else{
+                addRuns(3)
+            }
         }
         btn_four.setOnClickListener {
-            addRuns(4)
+            if(wide==1){
+                addWideRuns(4)
+            }
+            else if(byes==1){
+                addByesRuns(4)
+            }
+            else if(legByes==1){
+                addByesRuns(4)
+            }
+            else{
+                addRuns(4)
+            }
         }
         btn_six.setOnClickListener {
-            addRuns(6)
+            if(wide==1){
+                addWideRuns(6)
+            }
+            else if(byes==1){
+                addByesRuns(6)
+            }
+            else if(legByes==1){
+                addByesRuns(6)
+            }
+            else{
+                addRuns(6)
+            }
         }
 
         btn_wide.setOnClickListener {
             wide()
+        }
+
+        btn_byes.setOnClickListener {
+            byes()
+        }
+
+        btn_leg_byes.setOnClickListener {
+            legByes()
         }
 
 
@@ -95,10 +166,14 @@ class ScoreFragment : Fragment(){
         } else{
             sharedPreferences.getString("team_2_name", "").toString()
         }
+        var crr = 0.00
         val score = sharedPreferences.getInt("score", 0)
         val balls = sharedPreferences.getInt("balls", 0)
         val wickets = sharedPreferences.getInt("wickets", 0)
-        val crr = sharedPreferences.getString("crr", "0.00")?.toDouble()
+        var nCrr = sharedPreferences.getString("crr", "0.00")
+        if(nCrr!="Inf"){
+            crr= nCrr?.toDouble()!!
+        }
         val overs = balls/6
         val remBalls = balls%6
         val innings = sharedPreferences.getInt("innings", 0)
@@ -108,7 +183,13 @@ class ScoreFragment : Fragment(){
         if(innings == 1) {
             ll_score_crr.visibility = View.INVISIBLE
             tv_req.text = "CRR"
-            tv_score_req.text = "$crr"
+            if(nCrr =="Inf"){
+                tv_score_req.text = nCrr
+            }
+            else{
+                tv_score_req.text = "$crr"
+            }
+
             tv_target.visibility = View.GONE
         }
 
@@ -227,13 +308,13 @@ class ScoreFragment : Fragment(){
 
 
     private fun addRuns(x : Int){
-        Log.i("add runs ", "add runs $x")
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         var score = sharedPreferences.getInt("score", 0)
         score += x
         var balls  = sharedPreferences.getInt("balls", 0) + 1
         val overs : Int = balls/6
         val remBalls : Int = balls%6
+
         val fraction : Double = remBalls.toDouble()/6.00
         val totalOvers : Double = overs.toDouble() + fraction
         val newCrr : Double= score.toDouble() / totalOvers
@@ -246,21 +327,21 @@ class ScoreFragment : Fragment(){
 
         updateBatsmen(x)
         updateBowler(x)
-        if(remBalls == 1){
-            addNewOver("$x", x,overs)
-            nextOver()
+        updateScorecardList(score,balls)
+        if(balls==1 && score-x==0){
+            addNewOver(overs)
+            updateOversList("$x", x)
         }
-        else {
-            updateOversList("$x" ,x)
+        else{
+            if(remBalls==0){
+                updateOversList("$x",x)
+                addNewOver(overs)
+                nextOver()
+            }
+            else{
+                updateOversList("$x",x)
+            }
         }
-
-
-
-
-//        addRunsScorecardList(score, balls , )
-
-
-
         setupScore()
     }
 
@@ -268,12 +349,11 @@ class ScoreFragment : Fragment(){
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
         var list  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
-        val size = list.size
-        var over = list[size-1]
-        over.balls.add(ball)
-        over.runs = over.runs + runs
+        var size = list.size
+        size--
+        list[size].balls.add(ball)
+        list[size].runs += runs
 
-        list[size-1] = over
 
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
         overListJson = Gson().toJson(list)
@@ -283,16 +363,12 @@ class ScoreFragment : Fragment(){
 
     }
 
-    private fun addNewOver(ball : String, runs : Int, overs: Int){
+    private fun addNewOver(overs: Int){
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
         val list  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
         var over = OverModel(overs+1,0, ArrayList<String>())
-        over.runs = over.runs + runs
-        over.balls.add(ball)
         list.add(over)
-
-
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
         overListJson = Gson().toJson(list)
         editor.putString("over_list", overListJson)
@@ -339,8 +415,9 @@ class ScoreFragment : Fragment(){
         var balls = (bowler.balls%6).toDouble()
         balls /= 6
         overs += balls
-        bowler.eco = bowler.runsconceded.toDouble()/overs
-        bowler.eco = floor(bowler.eco * 100) / 100
+        var eco = bowler.runsconceded.toDouble()/overs
+        eco = floor(eco * 100) / 100
+        bowler.eco = eco.toString()
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
         val bowlerGson = Gson().toJson(bowler)
         editor.putString("bowler" , bowlerGson)
@@ -378,6 +455,8 @@ class ScoreFragment : Fragment(){
 
         val sharedPreferences : SharedPreferences= this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         val firstBatting = sharedPreferences.getInt("first_batting", 0)
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
         val team = if(firstBatting== 1){
             2
         }else{
@@ -400,26 +479,422 @@ class ScoreFragment : Fragment(){
         val mAlertDialog = mBuilder.show()
         mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        rv_choose_next_bowler.layoutManager = LinearLayoutManager(this.activity)
+        mAlertDialog.rv_choose_next_bowler.layoutManager = LinearLayoutManager(this.activity)
 
 
         val chooseBowlerAdapter = ChooseBowlerAdapter(this.activity!! ,bowlerList )
 
-        rv_choose_next_bowler.adapter = chooseBowlerAdapter
+        mAlertDialog.rv_choose_next_bowler.adapter = chooseBowlerAdapter
 
         mAlertDialog.btn_submit_bowler.setOnClickListener {
-            
+             val bowlerChoice = chooseBowlerAdapter.goNext()
+            if(bowlerChoice == bowler.name){
+
+                Toast.makeText(this.activity, "Please choose a different bowler", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val bowlerHashJSON = sharedPreferences.getString("bowler_hash", "")
+                val bowlerHash : HashMap<String, Int> = Gson().fromJson(bowlerHashJSON, object: TypeToken<HashMap<String,Int>>(){}.type)
+                if(bowlerHash[bowlerChoice] != null){
+                    val newBowler = getBowlerFromScorecard(bowlerHash[bowlerChoice]!!)
+                    val editor = sharedPreferences.edit()
+                    val json = Gson().toJson(newBowler)
+                    editor.putString("bowler",json)
+                    editor.commit()
+                }
+                else{
+                    val firstBatting = sharedPreferences.getInt("first_batting", 0)
+                    val teamNo = if(firstBatting==1){
+                        2
+                    }
+                    else{
+                        1
+                    }
+                    val teamName = sharedPreferences.getString("team_${teamNo}_name", "")
+                    bowlerHash[bowlerChoice] = bowlerHash.size
+                    val newBowler = BowlerModel(bowlerChoice,teamName,0,0,"0.00",0,0 )
+                    addNewBowlerToScorecard(newBowler)
+                    val editor = sharedPreferences.edit()
+                    val json = Gson().toJson(newBowler)
+                    editor.putString("bowler",json)
+                    editor.commit()
+
+                }
+                setupScore()
+                mAlertDialog.dismiss()
+            }
+
+
         }
 
     }
 
 
-    private fun wide(){
+
+
+    private fun getBowlerFromScorecard(x : Int): BowlerModel{
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].bowlerIndex = x
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+        editor.commit()
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+        return list[innings].bowlerList[x]
+
 
     }
 
 
+    private fun addNewBowlerToScorecard(newBowler : BowlerModel){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].bowlerList.add(newBowler)
+        list[innings].bowlerIndex = list[innings].bowlerList.size -1
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+        editor.commit()
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+    }
 
+    private fun updateScorecardList(score: Int ,  balls : Int){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].runs = score
+        list[innings].balls = balls
+
+        //updating batsman 1
+        val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        var batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        var index = list[innings].batsman1Index
+        list[innings].batsmenList[index] = batsman1
+
+        //updating batsman 2
+        index = list[innings].batsman2Index
+        val batsman2JSON = sharedPreferences.getString("batsman2", "")
+        var batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val index2 = list[innings].batsman2Index
+        list[innings].batsmenList[index2] = batsman2
+
+        //updating bowler
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        val bowlerIndex = list[innings].bowlerIndex
+        list[innings].bowlerList[bowlerIndex] = bowler
+
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+        editor.commit()
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+
+    }
+
+
+    private fun wide(){
+        disableButton(btn_no_ball)
+        disableButton(btn_wide)
+        disableButton(btn_leg_byes)
+        disableButton(btn_byes)
+        disableButton(btn_overthrow)
+        disableButton(btn_bowled)
+        disableButton(btn_catch)
+        disableButton(btn_lbw)
+        disableButton(btn_run_out)
+        disableButton(btn_stump)
+        wide=1
+
+    }
+
+    private fun disableButton(b : Button){
+        b.isEnabled = false
+        b.isClickable = false
+        b.setBackgroundColor(Color.parseColor("#6e6e6e"))
+    }
+
+    private fun enableButton(b : Button){
+        b.isEnabled = true
+        b.isClickable = true
+        b.setBackgroundColor(Color.parseColor("#123456"))
+    }
+
+
+    private fun addWideRuns(x: Int){
+
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+
+        //update score & crr
+        var score = sharedPreferences.getInt("score", 0)
+        score += x
+        score++
+        var balls  = sharedPreferences.getInt("balls", 0)
+
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        if(balls==0){
+            val newCrr = "Inf"
+            editor.putString("crr", newCrr)
+        }
+        else{
+            val overs : Int = balls/6
+            val remBalls : Int = balls%6
+
+            val fraction : Double = remBalls.toDouble()/6.00
+            val totalOvers : Double = overs.toDouble() + fraction
+            val newCrr : Double= score.toDouble() / totalOvers
+            val solution = floor(newCrr * 100) / 100
+            editor.putString("crr", "$solution")
+        }
+
+        editor.putInt("score", score)
+
+
+        //update bowler
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        bowler.runsconceded += x
+        bowler.runsconceded++
+        var oversBowler = (bowler.balls/6).toDouble()
+        var ballsBowler = (bowler.balls%6).toDouble()
+        ballsBowler /= 6
+        oversBowler += ballsBowler
+        if(balls ==0){
+            bowler.eco = "Inf"
+        }
+        else{
+            var eco = bowler.runsconceded.toDouble()/oversBowler
+            eco = floor(eco * 100) / 100
+            bowler.eco = eco.toString()
+
+        }
+        val bowlerGson = Gson().toJson(bowler)
+        editor.putString("bowler" , bowlerGson)
+
+        //update scorecard
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].runs = score
+        val bowlerIndex = list[innings].bowlerIndex
+        list[innings].bowlerList[bowlerIndex] = bowler
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+
+        //update overs
+        var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
+        var oversList  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
+
+        if(balls==0){
+            var over = OverModel(1,0, ArrayList<String>())
+            var ball = "Wd"
+            if(x!=0){
+                ball += "+$x"
+            }
+            over.balls.add(ball)
+            over.runs += x+1
+            oversList.add(over)
+
+
+        }
+        else{
+             var size = oversList.size
+            size--
+            var ball = "Wd"
+            if(x!=0){
+                ball += "+$x"
+            }
+            oversList[size].balls.add(ball)
+            oversList[size].runs += x+1
+
+        }
+
+        overListJson = Gson().toJson(oversList)
+        editor.putString("over_list", overListJson)
+        editor.commit()
+
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+
+        setupScore()
+
+
+        wide =0
+
+        enableButton(btn_no_ball)
+        enableButton(btn_wide)
+        enableButton(btn_leg_byes)
+        enableButton(btn_byes)
+        enableButton(btn_overthrow)
+        enableButton(btn_bowled)
+        enableButton(btn_catch)
+        enableButton(btn_lbw)
+        enableButton(btn_run_out)
+        enableButton(btn_stump)
+    }
+
+    private fun byes(){
+        disableButton(btn_no_ball)
+        disableButton(btn_wide)
+        disableButton(btn_leg_byes)
+        disableButton(btn_byes)
+        disableButton(btn_overthrow)
+        disableButton(btn_bowled)
+        disableButton(btn_catch)
+        disableButton(btn_lbw)
+        disableButton(btn_run_out)
+        disableButton(btn_stump)
+        disableButton(btn_dot)
+        byes=1
+    }
+
+    private fun legByes(){
+        disableButton(btn_no_ball)
+        disableButton(btn_wide)
+        disableButton(btn_leg_byes)
+        disableButton(btn_byes)
+        disableButton(btn_overthrow)
+        disableButton(btn_bowled)
+        disableButton(btn_catch)
+        disableButton(btn_lbw)
+        disableButton(btn_run_out)
+        disableButton(btn_stump)
+        disableButton(btn_dot)
+        legByes=1
+    }
+
+    private fun addByesRuns(x : Int){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+
+        //update score & crr
+        var score = sharedPreferences.getInt("score", 0)
+        score += x
+        var balls  = sharedPreferences.getInt("balls", 0)
+        balls++
+
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        if(balls==0){
+            val newCrr = "Inf"
+            editor.putString("crr", newCrr)
+        }
+        else{
+            val overs : Int = balls/6
+            val remBalls : Int = balls%6
+
+            val fraction : Double = remBalls.toDouble()/6.00
+            val totalOvers : Double = overs.toDouble() + fraction
+            val newCrr : Double= score.toDouble() / totalOvers
+            val solution = floor(newCrr * 100) / 100
+            editor.putString("crr", "$solution")
+        }
+
+        editor.putInt("score", score)
+        editor.putInt("balls", balls)
+
+
+        //update bowler
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        bowler.runsconceded += x
+        bowler.balls++
+        var oversBowler = (bowler.balls/6).toDouble()
+        var ballsBowler = (bowler.balls%6).toDouble()
+        ballsBowler /= 6
+        oversBowler += ballsBowler
+        if(balls ==0){
+            bowler.eco = "Inf"
+        }
+        else{
+            var eco = bowler.runsconceded.toDouble()/oversBowler
+            eco = floor(eco * 100) / 100
+            bowler.eco = eco.toString()
+
+        }
+        val bowlerGson = Gson().toJson(bowler)
+        editor.putString("bowler" , bowlerGson)
+
+        //update scorecard
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].runs = score
+        list[innings].balls++
+        val bowlerIndex = list[innings].bowlerIndex
+        list[innings].bowlerList[bowlerIndex] = bowler
+        val json = Gson().toJson(list)
+        editor.putString("scorecard_list", json)
+
+        //update overs
+        var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
+        var oversList  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
+        var ball = ""
+        if(oversList[0].balls.isEmpty()){
+            var over = OverModel(1,0, ArrayList<String>())
+            if(byes==1){
+                ball = "B"
+            }
+            else if(legByes==1){
+                ball = "LB"
+            }
+
+            ball += "$x"
+
+            over.balls.add(ball)
+            over.runs += x
+            oversList.add(over)
+
+
+        }
+        else{
+            var size = oversList.size
+            size--
+
+            if(byes==1){
+                ball = "B"
+            }
+            else if(legByes==1){
+                ball = "LB"
+            }
+
+
+            ball += "$x"
+
+            oversList[size].balls.add(ball)
+            oversList[size].runs += x
+
+        }
+
+        overListJson = Gson().toJson(oversList)
+        editor.putString("over_list", overListJson)
+        editor.commit()
+
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+
+        setupScore()
+        legByes=0
+        byes =0
+        enableButton(btn_dot)
+        enableButton(btn_no_ball)
+        enableButton(btn_wide)
+        enableButton(btn_leg_byes)
+        enableButton(btn_byes)
+        enableButton(btn_overthrow)
+        enableButton(btn_bowled)
+        enableButton(btn_catch)
+        enableButton(btn_lbw)
+        enableButton(btn_run_out)
+        enableButton(btn_stump)
+    }
 
 
 

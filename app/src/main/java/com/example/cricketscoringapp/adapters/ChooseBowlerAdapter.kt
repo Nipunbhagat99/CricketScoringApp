@@ -67,11 +67,9 @@ class ChooseBowlerAdapter(private val context : Context,private val list : Array
             }
 
         }
-
-
-
         return name
     }
+
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){

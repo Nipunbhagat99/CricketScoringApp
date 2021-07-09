@@ -2,8 +2,9 @@ package com.example.cricketscoringapp.activities
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ViewPagerAdapter
 import com.example.cricketscoringapp.fragments.OversFragment
@@ -11,26 +12,37 @@ import com.example.cricketscoringapp.fragments.ScoreFragment
 import com.example.cricketscoringapp.fragments.ScorecardFragment
 import com.example.cricketscoringapp.fragments.SquadsFragment
 import com.example.cricketscoringapp.models.OverModel
-import com.example.cricketscoringapp.models.PlayerModel
+import com.example.cricketscoringapp.utils.RefreshInterface
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_match.*
 
-class MatchActivity : AppCompatActivity() {
+class MatchActivity : AppCompatActivity(), RefreshInterface{
+
+    private val squadsFragment = SquadsFragment()
+    private val scoreFragment = ScoreFragment()
+    private val scorecardFragment = ScorecardFragment()
+    private val oversFragment = OversFragment()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
         setupOversList()
 
+
         setupTabs()
         setupVersus()
+
     }
+
+
 
     private fun setupTabs() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(SquadsFragment(), "Squads")
-        adapter.addFragment(ScoreFragment(), "Score")
-        adapter.addFragment(ScorecardFragment(), "Scorecard")
-        adapter.addFragment(OversFragment(), "Overs")
+        adapter.addFragment(squadsFragment, "Squads")
+        adapter.addFragment(scoreFragment, "Score")
+        adapter.addFragment(scorecardFragment, "Scorecard")
+        adapter.addFragment(oversFragment, "Overs")
         vp_match.adapter = adapter
         tabs.setupWithViewPager(vp_match)
 
@@ -50,5 +62,12 @@ class MatchActivity : AppCompatActivity() {
         val overListJson = Gson().toJson(list)
         editor.putString("over_list", overListJson)
         editor.commit()
+
     }
+
+    override fun refreshAdapter() {
+        scorecardFragment.refresh()
+    }
+
+
 }

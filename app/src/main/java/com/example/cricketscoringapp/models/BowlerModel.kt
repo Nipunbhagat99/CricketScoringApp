@@ -5,7 +5,7 @@ class BowlerModel (
         val team : String?,
         var runsconceded : Int,
         var wickets : Int,
-        var eco : Double,
+        var eco : String,
         var balls : Int,
         var maidens: Int
 )
