@@ -895,7 +895,5 @@ class ScoreFragment : Fragment(){
         enableButton(btn_run_out)
         enableButton(btn_stump)
     }
-
-
-
+    
 }
