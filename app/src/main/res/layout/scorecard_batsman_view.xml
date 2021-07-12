@@ -69,10 +69,13 @@ android:paddingTop="10dp"
 </LinearLayout>
 
     <TextView
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:id="@+id/tv_scorecard_wicket_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="b Wright"
+        android:text="Not Out"
+        android:textSize="12sp"
         android:paddingStart="25dp"
         />
 </LinearLayout>

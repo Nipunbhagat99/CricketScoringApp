@@ -5,7 +5,7 @@ class BatsmanModel(
         val team : String?,
         var runs : Int,
         var ballsFaced : Int,
-        var strikeRate : Double,
+        var strikeRate : String,
         var fours : Int,
         var sixes: Int,
         var wicket : String,

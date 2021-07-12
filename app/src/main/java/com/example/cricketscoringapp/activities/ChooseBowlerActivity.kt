@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ChooseBatsmenAdapter
@@ -36,18 +37,25 @@ class ChooseBowlerActivity : AppCompatActivity() {
             val editor : SharedPreferences.Editor = sharedPreferences.edit()
             val gson = Gson()
             val bowlerName  = chooseBowlerAdapter.goNext()
-            val bowler = BowlerModel(bowlerName,teamName,0,0,"0.00",0,0 )
-            Log.i("bowler", "bowler $bowlerName")
-            val bowlerHash = HashMap<String ,Int>()
-            bowlerHash[bowlerName] = 0
-            val json = gson.toJson(bowler)
-            editor.putString("bowler" , json)
-            val bowlerHashJson = gson.toJson(bowlerHash)
-            editor.putString("bowler_hash" , bowlerHashJson)
-            editor.commit()
-            val intent = Intent(this , MatchActivity::class.java)
-            startActivity(intent)
-            finish()
+            if(bowlerName == ""){
+                Toast.makeText(this,"Please select a bowler", Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                val bowler = BowlerModel(bowlerName,teamName,0,0,"0.0",0,0 )
+                Log.i("bowler", "bowler $bowlerName")
+                val bowlerHash = HashMap<String ,Int>()
+                bowlerHash[bowlerName] = 0
+                val json = gson.toJson(bowler)
+                editor.putString("bowler" , json)
+                val bowlerHashJson = gson.toJson(bowlerHash)
+                editor.putString("bowler_hash" , bowlerHashJson)
+                editor.commit()
+                val intent = Intent(this , MatchActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
 
         }
 

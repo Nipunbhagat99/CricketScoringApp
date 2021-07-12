@@ -16,15 +16,20 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ChooseBowlerAdapter
+import com.example.cricketscoringapp.adapters.ChoosePlayerAdapter
 import com.example.cricketscoringapp.models.*
 import com.example.cricketscoringapp.utils.RefreshInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.choose_bowler_dialog.*
+import kotlinx.android.synthetic.main.choose_next_batsman.*
+import kotlinx.android.synthetic.main.choose_next_batsman.view.*
 import kotlinx.android.synthetic.main.fragment_score.*
-import kotlinx.android.synthetic.main.fragment_scorecard.*
 import kotlinx.android.synthetic.main.select_batsman_on_strike_dialog.*
 import kotlinx.android.synthetic.main.select_batsman_on_strike_dialog.view.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.math.floor
 
 
@@ -33,6 +38,12 @@ class ScoreFragment : Fragment(){
     private var wide = 0
     private var byes = 0
     private var legByes = 0
+    private var noBall = 0
+    private var bowled = 0
+    private var lbw = 0
+    private var catch = 0
+    private var runout = 0
+    private var wicket =0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeScore()
@@ -60,6 +71,12 @@ class ScoreFragment : Fragment(){
                 if(wide==1){
                     addWideRuns(0)
                 }
+                else if(noBall==1){
+                    addWideRuns(0)
+                }
+                else if(catch==1 || runout==1){
+                    wicketAddRuns(0)
+                }
                 else{
                     addRuns(0)
                 }
@@ -73,8 +90,14 @@ class ScoreFragment : Fragment(){
             else if(byes==1){
                 addByesRuns(1)
             }
+            else if(noBall==1){
+                addWideRuns(1)
+            }
             else if(legByes==1){
                 addByesRuns(1)
+            }
+            else if(catch==1 || runout==1){
+                wicketAddRuns(1)
             }
             else{
                 addRuns(1)
@@ -88,8 +111,14 @@ class ScoreFragment : Fragment(){
             else if(byes==1){
                 addByesRuns(2)
             }
+            else if(noBall==1){
+                addWideRuns(2)
+            }
             else if(legByes==1){
                 addByesRuns(2)
+            }
+            else if(catch==1 || runout==1){
+                wicketAddRuns(2)
             }
             else{
                 addRuns(2)
@@ -103,8 +132,14 @@ class ScoreFragment : Fragment(){
             else if(byes==1){
                 addByesRuns(3)
             }
+            else if(noBall==1){
+                addWideRuns(3)
+            }
             else if(legByes==1){
                 addByesRuns(3)
+            }
+            else if(catch==1 || runout==1){
+                wicketAddRuns(3)
             }
             else{
                 addRuns(3)
@@ -116,6 +151,9 @@ class ScoreFragment : Fragment(){
             }
             else if(byes==1){
                 addByesRuns(4)
+            }
+            else if(noBall==1){
+                addWideRuns(4)
             }
             else if(legByes==1){
                 addByesRuns(4)
@@ -130,6 +168,9 @@ class ScoreFragment : Fragment(){
             }
             else if(byes==1){
                 addByesRuns(6)
+            }
+            else if(noBall==1){
+                addWideRuns(6)
             }
             else if(legByes==1){
                 addByesRuns(6)
@@ -151,6 +192,32 @@ class ScoreFragment : Fragment(){
             legByes()
         }
 
+        btn_no_ball.setOnClickListener {
+            noBall()
+        }
+
+        btn_bowled.setOnClickListener {
+            wicket()
+            bowled =1
+        }
+
+        btn_lbw.setOnClickListener {
+            wicket()
+            lbw=1
+        }
+
+        btn_catch.setOnClickListener {
+            wicketRun()
+            catch=1
+            wicket=1
+        }
+
+        btn_run_out.setOnClickListener {
+            wicketRun()
+            runout=1
+            wicket=1
+        }
+
 
 
     }
@@ -170,14 +237,14 @@ class ScoreFragment : Fragment(){
         val score = sharedPreferences.getInt("score", 0)
         val balls = sharedPreferences.getInt("balls", 0)
         val wickets = sharedPreferences.getInt("wickets", 0)
-        var nCrr = sharedPreferences.getString("crr", "0.00")
+        val nCrr = sharedPreferences.getString("crr", "0.00")
         if(nCrr!="Inf"){
             crr= nCrr?.toDouble()!!
         }
         val overs = balls/6
         val remBalls = balls%6
         val innings = sharedPreferences.getInt("innings", 0)
-        tv_score_team_name.text = teamName.toUpperCase()
+        tv_score_team_name.text = teamName.toUpperCase(Locale.getDefault())
         tv_runs_wickets.text = "${score}-${wickets}"
         tv_overs.text = "(${overs}.${remBalls})"
         if(innings == 1) {
@@ -209,7 +276,7 @@ class ScoreFragment : Fragment(){
         tv_score_batsman1_balls.text = batsman1.ballsFaced.toString()
         tv_score_batsman1_fours.text = batsman1.fours.toString()
         tv_score_batsman1_sixes.text = batsman1.sixes.toString()
-        tv_score_batsman1_strike_rate.text = batsman1.strikeRate.toString()
+        tv_score_batsman1_strike_rate.text = batsman1.strikeRate
 
         val batsman2JSON = sharedPreferences.getString("batsman2","")
         val batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
@@ -218,7 +285,7 @@ class ScoreFragment : Fragment(){
         tv_score_batsman2_balls.text = batsman2.ballsFaced.toString()
         tv_score_batsman2_fours.text = batsman2.fours.toString()
         tv_score_batsman2_sixes.text = batsman2.sixes.toString()
-        tv_score_batsman2_strike_rate.text = batsman2.strikeRate.toString()
+        tv_score_batsman2_strike_rate.text = batsman2.strikeRate
 
     }
 
@@ -250,7 +317,7 @@ class ScoreFragment : Fragment(){
         editor.commit()
     }
 
-    private fun getBatsmanOnStrike(){
+    private fun  getBatsmanOnStrike(){
 
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         val batsman1JSON = sharedPreferences.getString("batsman1", "")
@@ -264,22 +331,36 @@ class ScoreFragment : Fragment(){
             .inflate(R.layout.select_batsman_on_strike_dialog,null)
         mDialogView.player_1.text = batsman1.name
         mDialogView.player_2.text = batsman2.name
+        if(runout==1){
+            mDialogView.select_batsman_heading.text = "Choose batsman who got run out"
+        }
+
 
         val mBuilder = AlertDialog.Builder(this.activity)
             .setView(mDialogView)
             .setCancelable(false)
 
 
+
+
         val mAlertDialog = mBuilder.show()
         mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         mAlertDialog.player_1.setOnClickListener {
-            playerStrike(1)
+
+            if(runout==1)
+                runOut(1)
+            else
+                playerStrike(1)
+
             mAlertDialog.dismiss()
         }
 
         mAlertDialog.player_2.setOnClickListener {
-            playerStrike(2)
+            if(runout==1)
+                runOut(2)
+            else
+                playerStrike(2)
             mAlertDialog.dismiss()
         }
 
@@ -300,6 +381,10 @@ class ScoreFragment : Fragment(){
             editor.commit()
             setupScore()
 
+        if(wicket==1){
+            updatestrikeScorecard(x)
+            wicket=0
+        }
 
 
 
@@ -389,10 +474,10 @@ class ScoreFragment : Fragment(){
             batsman.fours++
         else if(x==6)
             batsman.sixes++
-
-        batsman.strikeRate = batsman.runs.toDouble()/batsman.ballsFaced.toDouble()
-        batsman.strikeRate *= 100
-        batsman.strikeRate = floor(batsman.strikeRate * 100) / 100
+        var strikeRate = batsman.runs.toDouble()/batsman.ballsFaced.toDouble()
+        strikeRate *=100
+        strikeRate = floor(strikeRate * 100) / 100
+        batsman.strikeRate = strikeRate.toString()
 
 
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
@@ -422,8 +507,6 @@ class ScoreFragment : Fragment(){
         val bowlerGson = Gson().toJson(bowler)
         editor.putString("bowler" , bowlerGson)
         editor.commit()
-
-
     }
 
     private fun strikeChange(){
@@ -448,6 +531,7 @@ class ScoreFragment : Fragment(){
         editor.putString("batsman$batsmanNumber" , batsmanNewGson)
         editor.putInt("batsman_on_strike", batsmanNumber)
         editor.commit()
+
 
     }
 
@@ -658,6 +742,30 @@ class ScoreFragment : Fragment(){
 
         editor.putInt("score", score)
 
+        //update batsman
+        if(noBall==1){
+            val batsmanNumber = sharedPreferences.getInt("batsman_on_strike", 1)
+            val batsmanJSON = sharedPreferences.getString("batsman$batsmanNumber", "")
+            var batsman : BatsmanModel = Gson().fromJson(batsmanJSON, object: TypeToken<BatsmanModel>(){}.type)
+            batsman.runs += x
+
+            if(balls==0){
+                batsman.strikeRate = "Inf"
+            }
+            else {
+                var strikeRate = batsman.runs.toDouble() / batsman.ballsFaced.toDouble()
+                strikeRate *= 100
+                strikeRate = floor(strikeRate * 100) / 100
+                batsman.strikeRate = strikeRate.toString()
+            }
+
+            val batsmanGson = Gson().toJson(batsman)
+            editor.putString("batsman$batsmanNumber" , batsmanGson)
+            editor.commit()
+        }
+
+        if(x%2 != 0)
+            strikeChange()
 
         //update bowler
         val bowlerJSON = sharedPreferences.getString("bowler", "")
@@ -685,6 +793,20 @@ class ScoreFragment : Fragment(){
         val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
         val innings = sharedPreferences.getInt("innings" , 0) -1
         list[innings].runs = score
+
+        //updating batsman 1
+        val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        var batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        var index = list[innings].batsman1Index
+        list[innings].batsmenList[index] = batsman1
+
+        //updating batsman 2
+        index = list[innings].batsman2Index
+        val batsman2JSON = sharedPreferences.getString("batsman2", "")
+        var batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val index2 = list[innings].batsman2Index
+        list[innings].batsmenList[index2] = batsman2
+
         val bowlerIndex = list[innings].bowlerIndex
         list[innings].bowlerList[bowlerIndex] = bowler
         val json = Gson().toJson(list)
@@ -693,10 +815,15 @@ class ScoreFragment : Fragment(){
         //update overs
         var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
         var oversList  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
-
+        var ball = ""
         if(balls==0){
             var over = OverModel(1,0, ArrayList<String>())
-            var ball = "Wd"
+            if(wide==1){
+                ball = "Wd"
+            }
+            else if(noBall==1){
+                ball = "NB"
+            }
             if(x!=0){
                 ball += "+$x"
             }
@@ -709,7 +836,12 @@ class ScoreFragment : Fragment(){
         else{
              var size = oversList.size
             size--
-            var ball = "Wd"
+            if(wide==1){
+                ball = "Wd"
+            }
+            else if(noBall==1){
+                ball = "NB"
+            }
             if(x!=0){
                 ball += "+$x"
             }
@@ -729,6 +861,7 @@ class ScoreFragment : Fragment(){
 
 
         wide =0
+        noBall=0
 
         enableButton(btn_no_ball)
         enableButton(btn_wide)
@@ -801,6 +934,24 @@ class ScoreFragment : Fragment(){
         editor.putInt("balls", balls)
 
 
+        //update batsman
+        val batsmanNumber = sharedPreferences.getInt("batsman_on_strike", 1)
+        val batsmanJSON = sharedPreferences.getString("batsman$batsmanNumber", "")
+        var batsman : BatsmanModel = Gson().fromJson(batsmanJSON, object: TypeToken<BatsmanModel>(){}.type)
+        batsman.ballsFaced++
+        var strikeRate = batsman.runs.toDouble()/batsman.ballsFaced.toDouble()
+        strikeRate *=100
+        strikeRate = floor(strikeRate * 100) / 100
+        batsman.strikeRate = strikeRate.toString()
+
+        val batsmanGson = Gson().toJson(batsman)
+        editor.putString("batsman$batsmanNumber" , batsmanGson)
+        editor.commit()
+        if(x%2 != 0)
+            strikeChange()
+
+
+
         //update bowler
         val bowlerJSON = sharedPreferences.getString("bowler", "")
         val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
@@ -827,6 +978,20 @@ class ScoreFragment : Fragment(){
         val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
         val innings = sharedPreferences.getInt("innings" , 0) -1
         list[innings].runs = score
+
+        //updating batsman 1
+        val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        var batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        var index = list[innings].batsman1Index
+        list[innings].batsmenList[index] = batsman1
+
+        //updating batsman 2
+        index = list[innings].batsman2Index
+        val batsman2JSON = sharedPreferences.getString("batsman2", "")
+        var batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val index2 = list[innings].batsman2Index
+        list[innings].batsmenList[index2] = batsman2
+
         list[innings].balls++
         val bowlerIndex = list[innings].bowlerIndex
         list[innings].bowlerList[bowlerIndex] = bowler
@@ -846,6 +1011,7 @@ class ScoreFragment : Fragment(){
                 ball = "LB"
             }
 
+
             ball += "$x"
 
             over.balls.add(ball)
@@ -854,6 +1020,7 @@ class ScoreFragment : Fragment(){
 
 
         }
+
         else{
             var size = oversList.size
             size--
@@ -871,11 +1038,18 @@ class ScoreFragment : Fragment(){
             oversList[size].balls.add(ball)
             oversList[size].runs += x
 
+
+
         }
 
         overListJson = Gson().toJson(oversList)
         editor.putString("over_list", overListJson)
         editor.commit()
+
+        if(balls%6==0){
+            addNewOver(oversList.size)
+            nextOver()
+        }
 
         ri = activity as RefreshInterface
         ri.refreshAdapter()
@@ -895,5 +1069,573 @@ class ScoreFragment : Fragment(){
         enableButton(btn_run_out)
         enableButton(btn_stump)
     }
-    
+
+    private fun noBall(){
+        disableButton(btn_no_ball)
+        disableButton(btn_wide)
+        disableButton(btn_leg_byes)
+        disableButton(btn_byes)
+        disableButton(btn_overthrow)
+        disableButton(btn_bowled)
+        disableButton(btn_catch)
+        disableButton(btn_lbw)
+        disableButton(btn_run_out)
+        disableButton(btn_stump)
+        noBall=1
+    }
+
+
+
+    private fun wicket(playerName : String  = "", playerNo : Int =1){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val remainingBatsmen = sharedPreferences.getString("remainingBatsmen", emptyList<PlayerModel>().toString())
+        val firstBatting = sharedPreferences.getInt("first_batting", 1)
+        val teamName = sharedPreferences.getString("team_${firstBatting}_name" , "lol").toString()
+        val list : ArrayList<PlayerModel> = Gson().fromJson(remainingBatsmen, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+
+        val mDialogView = LayoutInflater
+            .from(this.activity)
+            .inflate(R.layout.choose_next_batsman,null)
+
+        mDialogView.rv_choose_next_batsman.layoutManager = LinearLayoutManager(this.activity)
+
+        val chooseNextBatsmenAdapter = ChoosePlayerAdapter(this.activity!!,list)
+
+        mDialogView.rv_choose_next_batsman.adapter = chooseNextBatsmenAdapter
+
+        val mBuilder = AlertDialog.Builder(this.activity)
+            .setView(mDialogView)
+            .setCancelable(false)
+
+
+        val mAlertDialog = mBuilder.show()
+
+        mAlertDialog.btn_submit_player.setOnClickListener {
+
+
+            if(catch==1 || runout==1){
+                val remainingBatsmenNew = chooseNextBatsmenAdapter.goNext()
+
+                if(remainingBatsmenNew.size == list.size){
+                    Toast.makeText(this.activity,"Please select a player", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    val batsmanName= chooseNextBatsmenAdapter.player
+                    val newBatsmanModel = BatsmanModel(batsmanName, teamName , 0 , 0,"0.0", 0, 0, "Not Out" ,true )
+                    updateCatchOrRunout(playerName,newBatsmanModel, remainingBatsmenNew, playerNo )
+                    mAlertDialog.dismiss()
+                }
+            }
+            else{
+                val remainingBatsmenNew = chooseNextBatsmenAdapter.goNext()
+
+                if(remainingBatsmenNew.size == list.size){
+                    Toast.makeText(this.activity,"Please select a player", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    val batsmanName= chooseNextBatsmenAdapter.player
+                    val newBatsmanModel = BatsmanModel(batsmanName, teamName , 0 , 0,"0.0", 0, 0, "Not Out" ,true )
+                    updateBowled(newBatsmanModel ,remainingBatsmenNew)
+                    mAlertDialog.dismiss()
+                }
+            }
+
+
+        }
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+
+    }
+
+    private fun updateBowled(batsmanModel: BatsmanModel , remainingBatsmen : ArrayList<PlayerModel>){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        var balls  = sharedPreferences.getInt("balls", 0)
+        balls++
+        var wickets  = sharedPreferences.getInt("wickets", 0)
+        wickets++
+
+
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+
+        //update bowler
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        bowler.wickets++
+        bowler.balls++
+        var overs = (bowler.balls/6).toDouble()
+        var ballsBowler = (bowler.balls%6).toDouble()
+        ballsBowler /= 6
+        overs += ballsBowler
+        var eco = bowler.runsconceded.toDouble()/overs
+        eco = floor(eco * 100) / 100
+        bowler.eco = eco.toString()
+        val bowlerGson = Gson().toJson(bowler)
+        editor.putString("bowler" , bowlerGson)
+        editor.putInt("balls" , balls)
+        editor.putInt("wickets" , wickets)
+
+            //update remaining batsmen
+        val json = Gson().toJson(remainingBatsmen)
+        editor.putString("remainingBatsmen" , json)
+
+        //update batsman
+        var batsmanNumber = sharedPreferences.getInt("batsman_on_strike", 1)
+
+
+        val batsmanJSON = sharedPreferences.getString("batsman$batsmanNumber", "")
+        var batsmanOld : BatsmanModel = Gson().fromJson(batsmanJSON, object: TypeToken<BatsmanModel>(){}.type)
+        batsmanOld.name = batsmanOld.name?.dropLast(1)
+        if(bowled==1){
+            batsmanOld.wicket = "b ${bowler.name}"
+            bowled =0
+        }
+        if(lbw==1){
+            batsmanOld.wicket = "lbw ${bowler.name}"
+            lbw =0
+        }
+
+        if(batsmanOld.runs ==0){
+            batsmanOld.strikeRate == "0.00"
+        }
+        else{
+            var strikeRate = batsmanOld.runs.toDouble()/batsmanOld.ballsFaced.toDouble()
+            strikeRate *=100
+            strikeRate = floor(strikeRate * 100) / 100
+            batsmanOld.strikeRate = strikeRate.toString()
+        }
+
+
+
+        batsmanModel.name = batsmanModel.name + "*"
+
+        val batsmanNewGson = Gson().toJson(batsmanModel)
+        editor.putString("batsman$batsmanNumber" , batsmanNewGson)
+
+        //update overs
+        var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
+        var oversList  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
+        if(balls==1){
+            val ballsArray = ArrayList<String>()
+            ballsArray.add("W")
+            oversList.add(OverModel(1,0,ballsArray))
+        }
+        else{
+            oversList[oversList.size-1].balls.add("W")
+        }
+
+
+        overListJson = Gson().toJson(oversList)
+        editor.putString("over_list", overListJson)
+
+
+        //update scorecard
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+        list[innings].wickets++
+        list[innings].balls++
+
+        list[innings].batsmenList.add(batsmanModel)
+
+        if(batsmanNumber==1){
+            Log.e("LMAO", "1")
+            list[innings].batsmenList[list[innings].batsman1Index] = batsmanOld
+            list[innings].batsman1Index = list[innings].batsmenList.size -1
+        }
+        else if(batsmanNumber==2){
+            Log.e("LMAO", "2")
+            list[innings].batsmenList[list[innings].batsman2Index] = batsmanOld
+            list[innings].batsman2Index = list[innings].batsmenList.size -1
+        }
+
+        list[innings].bowlerList[list[innings].bowlerIndex] = bowler
+
+        val json1 = Gson().toJson(list)
+        editor.putString("scorecard_list", json1)
+
+        editor.commit()
+
+
+        setupScore()
+
+        if(balls%6==0){
+            addNewOver(oversList.size)
+            nextOver()
+        }
+
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+
+
+    }
+
+
+    private fun wicketRun(){
+        disableButton(btn_four)
+        disableButton(btn_six)
+        disableButton(btn_no_ball)
+        disableButton(btn_wide)
+        disableButton(btn_leg_byes)
+        disableButton(btn_byes)
+        disableButton(btn_overthrow)
+        disableButton(btn_bowled)
+        disableButton(btn_catch)
+        disableButton(btn_lbw)
+        disableButton(btn_run_out)
+        disableButton(btn_stump)
+
+
+    }
+
+
+    private fun wicketAddRuns(x : Int){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val score = sharedPreferences.getInt("score", 0)+ x
+        val balls = sharedPreferences.getInt("balls", 0)+1
+        val wickets = sharedPreferences.getInt("wickets", 0)+1
+        val overs : Int = balls/6
+        val remBalls : Int = balls%6
+
+        val fraction : Double = remBalls.toDouble()/6.00
+        val totalOvers : Double = overs.toDouble() + fraction
+        val newCrr : Double= score.toDouble() / totalOvers
+        val solution = floor(newCrr * 100) / 100
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString("crr", "$solution")
+        editor.putInt("balls", balls)
+        editor.putInt("score", score)
+        editor.putInt("wickets", wickets)
+
+        var batsmanNumber = sharedPreferences.getInt("batsman_on_strike", 1)
+
+
+        val batsmanJSON = sharedPreferences.getString("batsman$batsmanNumber", "")
+        var batsmanOld : BatsmanModel = Gson().fromJson(batsmanJSON, object: TypeToken<BatsmanModel>(){}.type)
+        batsmanOld.runs += x
+        batsmanOld.name = batsmanOld.name?.dropLast(1)
+
+        batsmanOld.ballsFaced++
+        if(batsmanOld.runs ==0){
+            batsmanOld.strikeRate == "0.00"
+        }
+        else{
+            var strikeRate = batsmanOld.runs.toDouble()/batsmanOld.ballsFaced.toDouble()
+            strikeRate *=100
+            strikeRate = floor(strikeRate * 100) / 100
+            batsmanOld.strikeRate = strikeRate.toString()
+        }
+        editor.putString("batsman$batsmanNumber",Gson().toJson(batsmanOld))
+
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+        if(catch ==1){
+            bowler.wickets++
+        }
+        bowler.runsconceded +=x
+        bowler.balls++
+        var oversBowler = (bowler.balls/6).toDouble()
+        var ballsBowler = (bowler.balls%6).toDouble()
+        ballsBowler /= 6
+        oversBowler += ballsBowler
+        var eco = bowler.runsconceded.toDouble()/oversBowler
+        eco = floor(eco * 100) / 100
+        bowler.eco = eco.toString()
+        val bowlerGson = Gson().toJson(bowler)
+        editor.putString("bowler" , bowlerGson)
+
+
+        var overListJson = sharedPreferences.getString("over_list", emptyList<OverModel>().toString())
+        var oversList  : ArrayList<OverModel> = Gson().fromJson(overListJson, object: TypeToken<ArrayList<OverModel>>(){}.type)
+        if(balls==1){
+            val ballsArray = ArrayList<String>()
+            ballsArray.add("W")
+            oversList.add(OverModel(1,0,ballsArray))
+        }
+        else{
+            oversList[oversList.size-1].balls.add("W")
+        }
+
+        overListJson = Gson().toJson(oversList)
+        editor.putString("over_list", overListJson)
+
+
+
+
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+
+        list[innings].balls = balls
+        list[innings].wickets = wickets
+        list[innings].runs = score
+
+        val json1 = Gson().toJson(list)
+        editor.putString("scorecard_list", json1)
+
+
+        editor.commit()
+
+        setupScore()
+
+        if(runout ==1 ){
+            getBatsmanOnStrike()
+        }
+        else if(catch ==1){
+            catch()
+        }
+
+
+
+    }
+
+
+
+
+    private fun runOut(x: Int){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val innings= sharedPreferences.getInt("innings", 1)
+        var teamNo = sharedPreferences.getInt("first_batting", 1)
+        if(innings ==1){
+            teamNo = if(teamNo ==2)
+                1
+            else
+                2
+        }
+        val team = sharedPreferences.getString("team_${teamNo}" , "lol").toString()
+        val list : ArrayList<PlayerModel> = Gson().fromJson(team, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+        val mDialogView = LayoutInflater
+            .from(this.activity)
+            .inflate(R.layout.choose_next_batsman,null)
+
+
+
+
+        mDialogView.rv_choose_next_batsman.layoutManager = LinearLayoutManager(this.activity)
+
+        val choosePlayerAdapter = ChoosePlayerAdapter(this.activity!!,list)
+
+        mDialogView.rv_choose_next_batsman.adapter = choosePlayerAdapter
+        mDialogView.choose_player_dialog_heading.text = "Choose player who run out"
+
+        val mBuilder = AlertDialog.Builder(this.activity)
+            .setView(mDialogView)
+            .setCancelable(false)
+
+
+        val mAlertDialog = mBuilder.show()
+
+        mAlertDialog.btn_submit_player.setOnClickListener {
+
+            val playerName = choosePlayerAdapter.getPlayer()
+            if(playerName == ""){
+                Toast.makeText(this.activity,"Please choose a player",Toast.LENGTH_SHORT ).show()
+            }
+            else{
+                wicket(playerName, x)
+                mAlertDialog.dismiss()
+            }
+
+        }
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+
+
+
+
+
+    private fun catch(){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val innings= sharedPreferences.getInt("innings", 1)
+        var teamNo = sharedPreferences.getInt("first_batting", 1)
+        if(innings ==1){
+            teamNo = if(teamNo ==2)
+                1
+            else
+                2
+        }
+        val team = sharedPreferences.getString("team_${teamNo}" , "lol").toString()
+        val list : ArrayList<PlayerModel> = Gson().fromJson(team, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
+        val mDialogView = LayoutInflater
+            .from(this.activity)
+            .inflate(R.layout.choose_next_batsman,null)
+
+        mDialogView.rv_choose_next_batsman.layoutManager = LinearLayoutManager(this.activity)
+
+        val choosePlayerAdapter = ChoosePlayerAdapter(this.activity!!,list)
+
+        mDialogView.rv_choose_next_batsman.adapter = choosePlayerAdapter
+        mDialogView.choose_player_dialog_heading.text = "Choose player who caught the ball"
+
+        val mBuilder = AlertDialog.Builder(this.activity)
+            .setView(mDialogView)
+            .setCancelable(false)
+
+
+        val mAlertDialog = mBuilder.show()
+
+        mAlertDialog.btn_submit_player.setOnClickListener {
+
+            val playerName = choosePlayerAdapter.getPlayer()
+            if(playerName == ""){
+                Toast.makeText(this.activity,"Please choose a player",Toast.LENGTH_SHORT ).show()
+            }
+            else{
+                wicket(playerName)
+                mAlertDialog.dismiss()
+            }
+
+        }
+        mAlertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
+
+
+    private fun updateCatchOrRunout(playerName : String ,batsmanModel: BatsmanModel , remainingBatsmen : ArrayList<PlayerModel>,playerNo : Int =1){
+        val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        var batsmanNumber = sharedPreferences.getInt("batsman_on_strike", 1)
+        val batsmanJSON = sharedPreferences.getString("batsman$batsmanNumber", "")
+        val balls = sharedPreferences.getInt("balls" ,0)
+        var batsman : BatsmanModel = Gson().fromJson(batsmanJSON, object: TypeToken<BatsmanModel>(){}.type)
+
+        val bowlerJSON = sharedPreferences.getString("bowler", "")
+        val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
+
+        var wicketString = ""
+        if(catch ==1){
+            if(playerName == bowler.name){
+                batsman.wicket = "c&b $playerName"
+                wicketString = batsman.wicket
+            }
+            else{
+                batsman.wicket = "c $playerName b ${bowler.name}"
+                wicketString = batsman.wicket
+            }
+
+        }
+        else if(runout==1){
+            batsman.wicket = "run out ($playerName)"
+            wicketString = batsman.wicket
+        }
+
+        val editor : SharedPreferences.Editor = sharedPreferences.edit()
+
+
+        //update scorecard
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+
+        list[innings].batsmenList.add(batsmanModel)
+
+
+        if(runout==1){
+            if(playerNo==1){
+                list[innings].batsmenList[list[innings].batsman1Index].wicket = wicketString
+                list[innings].batsman1Index = list[innings].batsmenList.size -1
+            }
+            else if(playerNo==2){
+                list[innings].batsmenList[list[innings].batsman2Index].wicket = wicketString
+                list[innings].batsman2Index = list[innings].batsmenList.size -1
+            }
+        }
+
+        if(catch==1){
+            if(batsmanNumber==1){
+                list[innings].batsmenList[list[innings].batsman1Index] = batsman
+                list[innings].batsman1Index = list[innings].batsmenList.size -1
+            }
+            else if(batsmanNumber==2){
+                list[innings].batsmenList[list[innings].batsman2Index] = batsman
+                list[innings].batsman2Index = list[innings].batsmenList.size -1
+            }
+        }
+
+
+        list[innings].bowlerList[list[innings].bowlerIndex] = bowler
+
+        editor.putString("scorecard_list" , Gson().toJson(list))
+        editor.putString("remainingBatsmen", Gson().toJson(remainingBatsmen))
+
+        if(catch==1){
+            editor.putString("batsman$batsmanNumber", Gson().toJson(batsmanModel))
+        }
+        else if(runout==1){
+            editor.putString("batsman$playerNo", Gson().toJson(batsmanModel))
+        }
+
+
+        editor.commit()
+
+        catch =0
+        runout=0
+        getBatsmanOnStrike()
+
+        if(balls%6==0){
+            addNewOver(balls/6)
+            nextOver()
+        }
+
+
+
+
+
+        setupScore()
+
+
+        enableButton(btn_four)
+        enableButton(btn_six)
+        enableButton(btn_no_ball)
+        enableButton(btn_wide)
+        enableButton(btn_leg_byes)
+        enableButton(btn_byes)
+        enableButton(btn_overthrow)
+        enableButton(btn_bowled)
+        enableButton(btn_catch)
+        enableButton(btn_lbw)
+        enableButton(btn_run_out)
+        enableButton(btn_stump)
+
+
+
+    }
+
+
+    private fun updatestrikeScorecard(x : Int){
+        val sharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+        val scorecardListJson = sharedPreferences.getString("scorecard_list", emptyList<ScorecardModel>().toString())
+        val list  : ArrayList<ScorecardModel> = Gson().fromJson(scorecardListJson, object: TypeToken<ArrayList<ScorecardModel>>(){}.type)
+        val innings = sharedPreferences.getInt("innings" , 0) -1
+
+        val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        var batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
+        var index = list[innings].batsman1Index
+        list[innings].batsmenList[index] = batsman1
+
+        index = list[innings].batsman2Index
+        val batsman2JSON = sharedPreferences.getString("batsman2", "")
+        var batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
+        val index2 = list[innings].batsman2Index
+        list[innings].batsmenList[index2] = batsman2
+
+        val editor = sharedPreferences.edit()
+
+        editor.putString("scorecard_list" , Gson().toJson(list))
+        editor.commit()
+
+        ri = activity as RefreshInterface
+        ri.refreshAdapter()
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

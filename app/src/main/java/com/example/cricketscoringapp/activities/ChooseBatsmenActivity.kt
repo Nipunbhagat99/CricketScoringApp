@@ -53,8 +53,8 @@ class ChooseBatsmenActivity : AppCompatActivity() {
                 editor.putString("remainingBatsmen" , json)
                 val batsman1Name = chooseBatsmenAdapter.batsman1
                 val batsman2Name = chooseBatsmenAdapter.batsman2
-                var batsman1 = BatsmanModel(batsman1Name, teamName , 0 , 0,0.00, 0, 0, "" ,true )
-                val batsman2 = BatsmanModel(batsman2Name, teamName , 0 , 0,0.00, 0, 0, "" ,true )
+                var batsman1 = BatsmanModel(batsman1Name, teamName , 0 , 0,"0.0", 0, 0, "Not Out" ,true )
+                val batsman2 = BatsmanModel(batsman2Name, teamName , 0 , 0,"0.0", 0, 0, "Not Out" ,true )
                 val batsman1Gson = gson.toJson(batsman1)
                 val batsman2Gson = gson.toJson(batsman2)
                 editor.putString("batsman1" , batsman1Gson)

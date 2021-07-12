@@ -8,10 +8,10 @@
     >
 
     <TextView
-        android:id="@+id/select_batsman_heading"
+        android:id="@+id/choose_player_dialog_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select batsman on strike"
+        android:text="Choose next Batsman"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -19,30 +19,25 @@
         android:gravity="center"
         />
 
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/rv_choose_next_batsman"
+       android:layout_width="match_parent"
+       android:orientation="vertical"
+       android:layout_height="wrap_content"
+       />
+
     <Button
 
-        android:id="@+id/player_1"
+        android:id="@+id/btn_submit_player"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:theme="@style/Button.Player"
         android:textColor="@color/white"
-        android:text="Player 1"
+        android:text="Submit"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:textSize="16sp"
         android:layout_marginBottom="10dp"
-        android:textAllCaps="false"
-        />
-    <Button
-        android:id="@+id/player_2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:theme="@style/Button.Player"
-        android:textColor="@color/white"
-        android:text="Player 2"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:textSize="16sp"
         android:textAllCaps="false"
         />
 
