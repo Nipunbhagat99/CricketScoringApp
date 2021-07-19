@@ -29,7 +29,9 @@ class ChooseBatsmenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_choose_batsmen)
+
         teamNo = intent.getIntExtra("team_no",0)
+
         getList(teamNo)
 
         rv_choose_batsmen.layoutManager = LinearLayoutManager(this)
@@ -42,10 +44,14 @@ class ChooseBatsmenActivity : AppCompatActivity() {
 
         btn_next_choose_bowlers.setOnClickListener {
 
-
+            val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
+            val battingTeam = sharedPreferences.getString("team_$teamNo", emptyList<PlayerModel>().toString())
+            val list1 : ArrayList<PlayerModel> = Gson().fromJson(battingTeam, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
             val remainingBatsmen : ArrayList<PlayerModel> = chooseBatsmenAdapter.goNext()
 
-            if(remainingBatsmen.size != 0){
+            Log.i("LMAO" , "${list1.size - remainingBatsmen.size}")
+
+            if(list1.size - remainingBatsmen.size == 2){
                 val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
                 val editor : SharedPreferences.Editor = sharedPreferences.edit()
                 val gson = Gson()

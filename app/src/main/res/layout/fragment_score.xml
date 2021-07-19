@@ -61,6 +61,7 @@
                 >
 
                 <TextView
+                    android:id="@+id/tv_crr"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -70,7 +71,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_crr"
+                    android:id="@+id/tv_score_crr"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -565,7 +566,8 @@
                 android:textColor="@color/white"
                 android:backgroundTint="#123456"
                 android:text="Over throw"
-                android:textSize="14sp"
+                android:textSize="12sp"
+                android:padding="-10dp"
                 android:layout_margin="5dp"
                 />
             <Button
@@ -576,7 +578,8 @@
                 android:textColor="@color/white"
                 android:backgroundTint="#123456"
                 android:text="Bowled"
-                android:textSize="12sp"
+                android:textSize="10sp"
+                android:padding="-10dp"
                 android:layout_margin="5dp"
                 />
 
@@ -595,11 +598,12 @@
                 android:id="@+id/btn_catch"
                 android:layout_weight="1"
                 android:layout_width="0dp"
+                android:textSize="12sp"
                 android:layout_height="match_parent"
                 android:textColor="@color/white"
                 android:backgroundTint="#123456"
                 android:text="catch"
-
+                android:padding="-10dp"
                 android:layout_margin="5dp"
                 />
             <Button
@@ -631,6 +635,8 @@
                 android:textColor="@color/white"
                 android:backgroundTint="#123456"
                 android:text="stump"
+                android:textSize="11sp"
+                android:padding="-10dp"
                 android:layout_margin="5dp"
                 />
 

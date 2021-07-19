@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.CricketScoringApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.CricketScoringApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+
         <item name="android:windowFullscreen">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FBD100</item>

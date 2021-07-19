@@ -57,10 +57,18 @@ class MatchActivity : AppCompatActivity(), RefreshInterface{
 
     private fun setupOversList(){
         val sharedPreferences : SharedPreferences = getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
-        val list = ArrayList<OverModel>()
-        val editor : SharedPreferences.Editor = sharedPreferences.edit()
-        val overListJson = Gson().toJson(list)
-        editor.putString("over_list", overListJson)
+        val innings = sharedPreferences.getInt("innings", 0)
+        if(innings ==0){
+            val list = ArrayList<OverModel>()
+            val editor : SharedPreferences.Editor = sharedPreferences.edit()
+            val overListJson = Gson().toJson(list)
+            editor.putString("over_list", overListJson)
+            editor.putString("scorecard_list", "")
+            editor.commit()
+        }
+
+        val editor = sharedPreferences.edit()
+        editor.putInt("innings", innings+1)
         editor.commit()
 
     }

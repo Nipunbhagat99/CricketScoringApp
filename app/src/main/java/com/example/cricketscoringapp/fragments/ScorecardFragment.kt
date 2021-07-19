@@ -64,21 +64,37 @@ class ScorecardFragment : Fragment(), ScorecardAdapter.OnItemClickedListener {
     }
 
     private fun setupScorecardList(){
-        val list = ArrayList<ScorecardModel>()
+        var list = ArrayList<ScorecardModel>()
         val sharedPreferences : SharedPreferences = this.activity!!.getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
         val batsman1JSON = sharedPreferences.getString("batsman1", "")
+        var listJson = sharedPreferences.getString("scorecard_list" , "")
+        list = if(listJson==""){
+            ArrayList<ScorecardModel>()
+        } else {
+            Gson().fromJson(listJson, object : TypeToken<ArrayList<ScorecardModel>>() {}.type)
+        }
         val batsman1 : BatsmanModel = Gson().fromJson(batsman1JSON, object: TypeToken<BatsmanModel>(){}.type)
         val batsman2JSON = sharedPreferences.getString("batsman2","")
         val batsman2 : BatsmanModel = Gson().fromJson(batsman2JSON, object: TypeToken<BatsmanModel>(){}.type)
         val batsmanList = ArrayList<BatsmanModel>()
         batsmanList.add(batsman1)
         batsmanList.add(batsman2)
+        val innings = sharedPreferences.getInt("innings" , 0)
 
         val bowlerJSON = sharedPreferences.getString("bowler", "")
         val bowler : BowlerModel = Gson().fromJson(bowlerJSON, object: TypeToken<BowlerModel>(){}.type)
         val bowlerList = ArrayList<BowlerModel>()
         bowlerList.add(bowler)
-        val firstBatting = sharedPreferences.getInt("first_batting", 1)
+        var firstBatting = sharedPreferences.getInt("first_batting", 1)
+        if(innings ==2){
+            firstBatting = if(firstBatting==1){
+                2
+            }
+            else{
+                1
+            }
+        }
+
         val teamName = sharedPreferences.getString("team_${firstBatting}_name", "")
         val scorecardModel = ScorecardModel(teamName,0,0,0,batsmanList,bowlerList,true,0,1,0)
 
