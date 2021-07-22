@@ -1,11 +1,13 @@
 package com.example.cricketscoringapp.activities
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_choose_batsmen.*
 import kotlinx.android.synthetic.main.activity_team_one.*
+import kotlinx.android.synthetic.main.exit_alert_dialog.view.*
 
 class ChooseBatsmenActivity : AppCompatActivity() {
 
@@ -85,6 +88,28 @@ class ChooseBatsmenActivity : AppCompatActivity() {
 
 
 
+    }
+
+
+    override fun onBackPressed() {
+        val mDialogView = LayoutInflater
+            .from(this)
+            .inflate(R.layout.exit_alert_dialog,null)
+
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+
+
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.btn_exit_cancel.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+
+        mDialogView.btn_exit.setOnClickListener {
+            this.finish()
+            mAlertDialog.dismiss()
+        }
     }
 
 

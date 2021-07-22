@@ -1,10 +1,13 @@
 package com.example.cricketscoringapp.activities
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
 import com.example.cricketscoringapp.R
 import com.example.cricketscoringapp.adapters.ViewPagerAdapter
 import com.example.cricketscoringapp.fragments.OversFragment
@@ -12,9 +15,15 @@ import com.example.cricketscoringapp.fragments.ScoreFragment
 import com.example.cricketscoringapp.fragments.ScorecardFragment
 import com.example.cricketscoringapp.fragments.SquadsFragment
 import com.example.cricketscoringapp.models.OverModel
+import com.example.cricketscoringapp.models.PlayerModel
 import com.example.cricketscoringapp.utils.RefreshInterface
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_match.*
+import kotlinx.android.synthetic.main.activity_team_two.*
+import kotlinx.android.synthetic.main.exit_alert_dialog.view.*
+import kotlinx.android.synthetic.main.new_player_dialog.*
+import kotlinx.android.synthetic.main.new_player_dialog.view.*
+
 
 class MatchActivity : AppCompatActivity(), RefreshInterface{
 
@@ -27,12 +36,38 @@ class MatchActivity : AppCompatActivity(), RefreshInterface{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
+
+
+
+
         setupOversList()
 
 
         setupTabs()
         setupVersus()
 
+    }
+
+
+    override fun onBackPressed() {
+        val mDialogView = LayoutInflater
+            .from(this)
+            .inflate(R.layout.exit_alert_dialog,null)
+
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+
+
+        val mAlertDialog = mBuilder.show()
+
+        mDialogView.btn_exit_cancel.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+
+        mDialogView.btn_exit.setOnClickListener {
+            this.finish()
+            mAlertDialog.dismiss()
+        }
     }
 
 

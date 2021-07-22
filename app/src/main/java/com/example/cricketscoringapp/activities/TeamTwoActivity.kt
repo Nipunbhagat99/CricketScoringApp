@@ -107,7 +107,6 @@ class TeamTwoActivity : AppCompatActivity() {
 
         val mBuilder = AlertDialog.Builder(this@TeamTwoActivity)
                 .setView(mDialogView)
-                .setTitle("ADD A NEW PLAYER")
 
 
 
