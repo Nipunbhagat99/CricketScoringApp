@@ -19,8 +19,8 @@ class ChooseBatsmenAdapter(private val context : Context,private val list : Arra
 
     var checkBoxStateArray = SparseBooleanArray(list.size-1)
     var count = 0
-    lateinit var batsman1 : String
-    lateinit var batsman2 : String
+    var batsman1 : String = ""
+     var batsman2 : String = ""
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
                 LayoutInflater.from(context).inflate(
@@ -56,7 +56,7 @@ class ChooseBatsmenAdapter(private val context : Context,private val list : Arra
         }
 
         if(count!=2){
-            return ArrayList<PlayerModel>()
+            return list
         }
         var x = checkBoxStateArray.size()
         x--

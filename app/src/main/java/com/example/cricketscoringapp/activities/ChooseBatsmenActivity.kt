@@ -52,7 +52,6 @@ class ChooseBatsmenActivity : AppCompatActivity() {
             val list1 : ArrayList<PlayerModel> = Gson().fromJson(battingTeam, object: TypeToken<ArrayList<PlayerModel>>(){}.type)
             val remainingBatsmen : ArrayList<PlayerModel> = chooseBatsmenAdapter.goNext()
 
-            Log.i("LMAO" , "${list1.size - remainingBatsmen.size}")
 
             if(list1.size - remainingBatsmen.size == 2){
                 val sharedPreferences : SharedPreferences= getSharedPreferences("SHARED_PREF" , Context.MODE_PRIVATE)
