@@ -83,7 +83,7 @@ Squad Fragment:
 
 
 
-Score Frgment:
+Score Fragment:
  - Keep score of the match
 
 
